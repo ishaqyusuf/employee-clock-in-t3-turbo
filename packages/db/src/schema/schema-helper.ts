@@ -10,9 +10,9 @@ export const timeStamps = {
   }).$onUpdateFn(() => sql`now()`),
 };
 
-export function _uuidRel(name, col, notNull = true) {
+export function _uuidRel(name: string, col: string | any, notNull = true) {
   let c = uuid(name);
   if (notNull) c = c.notNull();
-  return c.references(() => col);
+  return c.references(() => col as any);
 }
 export const __uuidPri = uuid("id").notNull().primaryKey().defaultRandom();
