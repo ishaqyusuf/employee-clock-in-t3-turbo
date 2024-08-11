@@ -10,13 +10,26 @@ export {
 } from "./schema/example";
 
 export {
+  School,
   AcademicClass,
+  CreateSchoolSchema,
   AcademicSession,
   AcademicTerm,
-  CreateSchoolSchema,
+  ClassSubject,
+  SessionClass,
+  Subjects,
+} from "./schema/school-schema";
+export {
   CreateStudentSchema,
-  Guardian,
-  School,
   Student,
   StudentSessionForm,
-} from "./schema/index";
+  Guardian,
+} from "./schema/student-schema";
+export {
+  Book,
+  BookTransaction,
+  PurchasedBook,
+  SchoolWallet,
+  StudentTransaction,
+  Transaction,
+} from "./schema/accounting-schema";

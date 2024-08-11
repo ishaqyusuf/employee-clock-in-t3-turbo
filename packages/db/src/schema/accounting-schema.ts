@@ -4,7 +4,7 @@ import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
 import { AcademicTerm, School } from "./school-schema";
 import { StudentSessionForm } from "./student-schema";
 
-export const schoolWallet = pgTable("school_wallet", {
+export const SchoolWallet = pgTable("school_wallet", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   balance: decimal("balance").default("0.00"),
@@ -12,7 +12,7 @@ export const schoolWallet = pgTable("school_wallet", {
 });
 
 type PaymentTypes = "credit" | "debit";
-export const transaction = pgTable("transaction", {
+export const Transaction = pgTable("transaction", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   type: varchar("type").$type<PaymentTypes>(),
@@ -22,32 +22,32 @@ export const transaction = pgTable("transaction", {
   academicTermId: _uuidRel("academicTermId", AcademicTerm.id),
   ...timeStamps,
 });
-export const studentTransaction = pgTable("student_transaction", {
+export const StudentTransaction = pgTable("student_transaction", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   studentSessionFormId: _uuidRel("studentSessionFormId", StudentSessionForm.id),
-  transactionId: _uuidRel("transactionId", transaction.id),
+  transactionId: _uuidRel("transactionId", Transaction.id),
   ...timeStamps,
 });
-export const bookTransaction = pgTable("book_transaction", {
+export const BookTransaction = pgTable("book_transaction", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   studentSessionFormId: _uuidRel("studentSessionFormId", StudentSessionForm.id),
-  transactionId: _uuidRel("transactionId", transaction.id),
+  transactionId: _uuidRel("transactionId", Transaction.id),
   ...timeStamps,
 });
-export const book = pgTable("book", {
+export const Book = pgTable("book", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   title: varchar("title"),
   amount: decimal("amount").notNull(),
   ...timeStamps,
 });
-export const purchasedBook = pgTable("transaction_book", {
+export const PurchasedBook = pgTable("transaction_book", {
   id: __uuidPri,
   schoolId: _uuidRel("schoolId", School.id),
   title: varchar("title"),
-  bookId: _uuidRel("bookId", book.id),
-  bookTransactionId: _uuidRel("bookTransactionId", bookTransaction.id),
+  bookId: _uuidRel("bookId", Book.id),
+  bookTransactionId: _uuidRel("bookTransactionId", BookTransaction.id),
   ...timeStamps,
 });

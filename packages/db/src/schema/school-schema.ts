@@ -1,26 +1,30 @@
 // school, academicSession, academicTerm
 // classes,
 
-import { integer, jsonb, pgTable, varchar } from "drizzle-orm/pg-core";
+import { integer, jsonb, pgTable, unique, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
 import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
 
 export const School = pgTable("school", {
   id: __uuidPri,
-  name: varchar("name", { length: 256 }).notNull(),
-  meta: jsonb("meta").$type<{
-    id: string;
-  }>(),
+  name: varchar("name", { length: 256 }).unique().notNull(),
+  meta: jsonb("meta").$type<{}>(),
   ...timeStamps,
 });
 export const CreateSchoolSchema = createInsertSchema(School, {});
-export const AcademicSession = pgTable("academic_session", {
-  id: __uuidPri,
-  name: varchar("name", { length: 256 }).notNull(),
-  schoolId: _uuidRel("schoolId", School.id),
-  ...timeStamps,
-});
+export const AcademicSession = pgTable(
+  "academic_session",
+  {
+    id: __uuidPri,
+    name: varchar("name", { length: 256 }).notNull(),
+    schoolId: _uuidRel("schoolId", School.id),
+    ...timeStamps,
+  },
+  (t) => ({
+    unq: unique().on(t.schoolId, t.name),
+  }),
+);
 export const AcademicTerm = pgTable("academic_term", {
   id: __uuidPri,
   name: varchar("name", { length: 256 }).notNull(),

@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { api, HydrateClient } from "~/trpc/server";
 import { AuthShowcase } from "./_components/auth-showcase";
+import Bootstrap from "./_components/bootstrap";
 import {
   CreatePostForm,
   PostCardSkeleton,
@@ -22,7 +23,7 @@ export default function HomePage() {
             Create <span className="text-primary">T3</span> Turbo
           </h1>
           <AuthShowcase />
-
+          <Bootstrap />
           <CreatePostForm />
           <div className="w-full max-w-2xl overflow-y-scroll">
             <Suspense
