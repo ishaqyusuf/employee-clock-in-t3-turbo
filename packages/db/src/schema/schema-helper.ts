@@ -13,6 +13,6 @@ export const timeStamps = {
 export function _uuidRel(name: string, col: string | any, notNull = true) {
   let c = uuid(name);
   if (notNull) c = c.notNull();
-  return c.references(() => col as any);
+  return c.references(() => col);
 }
 export const __uuidPri = uuid("id").notNull().primaryKey().defaultRandom();

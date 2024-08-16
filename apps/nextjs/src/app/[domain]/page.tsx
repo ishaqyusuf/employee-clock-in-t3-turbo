@@ -3,13 +3,13 @@ import { Suspense } from "react";
 import { db } from "@acme/db/client";
 
 import { api, HydrateClient } from "~/trpc/server";
-import { AuthShowcase } from "./_components/auth-showcase";
-import Bootstrap from "./_components/bootstrap";
+import { AuthShowcase } from "../_components/auth-showcase";
+import Bootstrap from "../_components/bootstrap";
 import {
   CreatePostForm,
   PostCardSkeleton,
   PostList,
-} from "./_components/posts";
+} from "../_components/posts";
 
 export const runtime = "edge";
 

@@ -11,13 +11,9 @@ export {
 
 export {
   School,
-  AcademicClass,
   CreateSchoolSchema,
   AcademicSession,
   AcademicTerm,
-  ClassSubject,
-  SessionClass,
-  Subjects,
 } from "./schema/school-schema";
 export {
   CreateStudentSchema,

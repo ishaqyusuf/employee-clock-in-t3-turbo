@@ -46,6 +46,7 @@
   },
   "globalEnv": [
     "POSTGRES_URL",
+    "NEXT_PUBLIC_ROOT_DOMAIN",
     "AUTH_DISCORD_ID",
     "AUTH_DISCORD_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
@@ -54,6 +55,7 @@
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",
+    "NEXT_PUBLIC_ROOT_DOMAIN",
     "CI",
     "VERCEL",
     "VERCEL_ENV",
