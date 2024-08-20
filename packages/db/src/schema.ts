@@ -20,4 +20,4 @@ export {
   notifications,
   telegramChannels,
   users,
-} from "./schema/user-schema.js";
+} from "./schema/user-schema";
