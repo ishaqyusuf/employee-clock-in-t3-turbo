@@ -9,8 +9,7 @@ export const timeStamps = {
     withTimezone: true,
   }).$onUpdateFn(() => sql`now()`),
 };
-
-export function _uuidRel(name: string, col: string | any, notNull = true) {
+export function _uuidRel(name: string, col: any, notNull = true) {
   let c = uuid(name);
   if (notNull) c = c.notNull();
   return c.references(() => col);

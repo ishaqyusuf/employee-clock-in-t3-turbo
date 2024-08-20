@@ -1,22 +1,25 @@
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-import { blogs } from "./blog-schema";
-import { __uuidPri, _uuidRel } from "./schema-helper";
-import { users } from "./user-schema";
+import { Blogs } from "./blog-schema";
+import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
+import { User } from "./user-schema";
 
-export const tags = pgTable("tags", {
+export const Tag = pgTable("tags", {
   id: __uuidPri,
   title: text("title").notNull(),
+  ...timeStamps,
 });
 
-export const blogTags = pgTable("blog_tags", {
+export const BlogTag = pgTable("blog_tag", {
   id: __uuidPri,
-  tagId: _uuidRel("tag_id", tags.id),
-  blogId: _uuidRel("blog_id", blogs.id),
+  tagId: _uuidRel("tag_id", Tag.id),
+  blogId: _uuidRel("blog_id", Blogs.id),
+  ...timeStamps,
 });
-export const searchLogs = pgTable("search_logs", {
+export const SearchLog = pgTable("search_log", {
   id: __uuidPri,
-  userId: _uuidRel("user_id", users.id), // Optional for logged-in users
+  userId: _uuidRel("user_id", User.id), // Optional for logged-in users
   searchTerm: text("search_term").notNull(),
   searchedAt: timestamp("searched_at").notNull().defaultNow(),
+  ...timeStamps,
 });

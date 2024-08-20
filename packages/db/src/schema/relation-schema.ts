@@ -1,80 +1,81 @@
 import { relations } from "drizzle-orm";
 
+import { Album, AlbumIndex, BlogNote, Blogs, Comment } from "./blog-schema";
+import { BlogTag, Tag } from "./tag-schema";
 import {
-  albumIndexes,
-  albums,
-  blogNotes,
-  blogs,
-  comments,
-} from "./blog-schema";
-import { blogTags, tags } from "./tag-schema";
-import {
-  mediaAuthors,
-  notifications,
-  telegramChannels,
-  users,
+  Account,
+  MediaAuthor,
+  Notification,
+  Session,
+  TelegramChannel,
+  User,
 } from "./user-schema";
 
 // Adjust imports based on your project structure
 
-export const blogRelations = relations(blogs, ({ one, many }) => ({
-  author: one(users, {
-    fields: [blogs.authorId],
-    references: [users.id],
+export const BlogRelations = relations(Blogs, ({ one, many }) => ({
+  author: one(User, {
+    fields: [Blogs.authorId],
+    references: [User.id],
   }),
-  mediaAuthor: one(mediaAuthors, {
-    fields: [blogs.mediaAuthorId],
-    references: [mediaAuthors.id],
+  mediaAuthor: one(MediaAuthor, {
+    fields: [Blogs.mediaAuthorId],
+    references: [MediaAuthor.id],
   }),
-  telegramChannel: one(telegramChannels, {
-    fields: [blogs.telegramChannelId],
-    references: [telegramChannels.id],
+  telegramChannel: one(TelegramChannel, {
+    fields: [Blogs.telegramChannelId],
+    references: [TelegramChannel.id],
   }),
-  notes: many(blogNotes),
-  tags: many(blogTags),
+  notes: many(BlogNote),
+  Tag: many(BlogTag),
 }));
 
-export const userRelations = relations(users, ({ many }) => ({
-  blogs: many(blogs),
-  notes: many(blogNotes),
+export const UserRelation = relations(User, ({ many }) => ({
+  Blogs: many(Blogs),
+  notes: many(BlogNote),
 }));
 
-export const albumRelations = relations(albums, ({ one, many }) => ({
-  mediaAuthor: one(mediaAuthors, {
-    fields: [albums.mediaAuthorId],
-    references: [mediaAuthors.id],
+export const AlbumRelation = relations(Album, ({ one, many }) => ({
+  mediaAuthor: one(MediaAuthor, {
+    fields: [Album.mediaAuthorId],
+    references: [MediaAuthor.id],
   }),
-  albumIndexes: many(albumIndexes),
+  AlbumIndex: many(AlbumIndex),
 }));
 
-export const tagRelations = relations(tags, ({ many }) => ({
-  blogTags: many(blogTags),
+export const TagRelation = relations(Tag, ({ many }) => ({
+  BlogTag: many(BlogTag),
 }));
-export const commentRelations = relations(comments, ({ one }) => ({
-  blog: one(blogs, {
-    fields: [comments.blogId],
-    references: [blogs.id],
+export const CommentRelation = relations(Comment, ({ one }) => ({
+  blog: one(Blogs, {
+    fields: [Comment.blogId],
+    references: [Blogs.id],
   }),
-  user: one(users, {
-    fields: [comments.userId],
-    references: [users.id],
-  }),
-}));
-
-export const notificationRelations = relations(notifications, ({ one }) => ({
-  user: one(users, {
-    fields: [notifications.userId],
-    references: [users.id],
+  user: one(User, {
+    fields: [Comment.userId],
+    references: [User.id],
   }),
 }));
 
+export const NotificationRelation = relations(Notification, ({ one }) => ({
+  user: one(User, {
+    fields: [Notification.userId],
+    references: [User.id],
+  }),
+}));
+export const SessionRelations = relations(Session, ({ one }) => ({
+  user: one(User, { fields: [Session.userId], references: [User.id] }),
+}));
+export const AccountRelations = relations(Account, ({ one }) => ({
+  user: one(User, { fields: [Account.userId], references: [User.id] }),
+}));
 // export const versionControlRelations = relations(blogVersions, ({ one }) => ({
-//   blog: one(blogs, {
+//   blog: one(Blogs, {
 //     fields: [blogVersions.blogId],
-//     references: [blogs.id],
+//     references: [Blogs.id],
 //   }),
 //   editor: one(users, {
 //     fields: [blogVersions.editedBy],
-//     references: [users.id],
+//     references: [User.id],
 //   }),
 // }));

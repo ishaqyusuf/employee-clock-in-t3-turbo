@@ -1,19 +1,21 @@
-import { integer, pgTable, serial, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, timestamp } from "drizzle-orm/pg-core";
 
-import { blogs } from "./blog-schema";
-import { __uuidPri, _uuidRel } from "./schema-helper";
-import { users } from "./user-schema";
+import { Blogs } from "./blog-schema";
+import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
+import { User } from "./user-schema";
 
-export const blogViews = pgTable("blog_views", {
+export const BlogViews = pgTable("blog_views", {
   id: __uuidPri,
-  blogId: _uuidRel("blog_id", blogs.id),
-  userId: _uuidRel("user_id", users.id), // Optional for logged-in users
+  blogId: _uuidRel("blog_id", Blogs.id),
+  userId: _uuidRel("user_id", User.id), // Optional for logged-in users
   viewedAt: timestamp("viewed_at").notNull().defaultNow(),
+  ...timeStamps,
 });
 
-export const blogLikes = pgTable("blog_likes", {
+export const BlogLikes = pgTable("blog_likes", {
   id: __uuidPri,
-  blogId: _uuidRel("blog_id", blogs.id),
-  userId: _uuidRel("user_id", users.id),
+  blogId: _uuidRel("blog_id", Blogs.id),
+  userId: _uuidRel("user_id", User.id),
   likedAt: timestamp("liked_at").notNull().defaultNow(),
+  ...timeStamps,
 });

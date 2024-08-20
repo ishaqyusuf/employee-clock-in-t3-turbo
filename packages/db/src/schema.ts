@@ -1,23 +1,27 @@
-export { blogLikes, blogViews } from "./schema/analytics-schema";
+export { BlogLikes, BlogViews } from "./schema/analytics-schema";
 export {
-  albumIndexes,
-  albums,
-  blogNotes,
-  blogs,
-  comments,
+  AlbumIndex,
+  Album,
+  BlogNote,
+  Blogs,
+  Comment,
 } from "./schema/blog-schema";
 export {
-  albumRelations,
-  blogRelations,
-  commentRelations,
-  notificationRelations,
-  tagRelations,
-  userRelations,
+  AlbumRelation,
+  BlogRelations,
+  CommentRelation,
+  NotificationRelation,
+  TagRelation,
+  UserRelation,
+  SessionRelations,
+  AccountRelations,
 } from "./schema/relation-schema";
-export { blogTags, searchLogs, tags } from "./schema/tag-schema";
+export { BlogTag, SearchLog, Tag } from "./schema/tag-schema";
 export {
-  mediaAuthors,
-  notifications,
-  telegramChannels,
-  users,
+  MediaAuthor,
+  Notification,
+  TelegramChannel,
+  User,
+  Session,
+  Account,
 } from "./schema/user-schema";
