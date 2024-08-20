@@ -17,7 +17,7 @@ if (!token)
 const bot = new Bot(token);
 console.log("HELLO MESSAGED!!!!");
 bot.on("message", async (ctx) => {
-  console.log(`MSG: ${ctx.message.text}`);
+  console.log(`MSG:`, ctx.message);
   await ctx.reply(JSON.stringify(ctx.message));
   // await db.insert(Blogs).values({
   //   mediaType: "audio",
