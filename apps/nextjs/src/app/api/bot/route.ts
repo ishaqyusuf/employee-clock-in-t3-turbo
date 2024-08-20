@@ -18,7 +18,12 @@ const bot = new Bot(token);
 console.log("HELLO MESSAGED!!!!");
 bot.on("message", async (ctx) => {
   console.log(`MSG:`, ctx.message);
-  await ctx.reply(JSON.stringify(ctx.message));
+  await ctx.reply(JSON.stringify(ctx.message), {
+    reply_parameters: {
+      message_id: ctx.msgId,
+      chat_id: ctx.chatId,
+    },
+  });
   // await db.insert(Blogs).values({
   //   mediaType: "audio",
   //   status: "as",
