@@ -15,7 +15,11 @@ export const User = pgTable("users", {
   id: __uuidPri,
   name: text("name").notNull(),
   email: text("email").unique().notNull(),
-
+  emailVerified: timestamp("emailVerified", {
+    mode: "date",
+    withTimezone: true,
+  }),
+  image: varchar("image", { length: 255 }),
   password: text("password").notNull(),
   role: varchar("role", { length: 20 }).notNull(), // e.g., "admin", "editor", "viewer"
   status: varchar("status", { length: 20 }).notNull(),
