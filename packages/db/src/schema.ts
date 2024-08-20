@@ -1,31 +1,23 @@
+export { blogLikes, blogViews } from "./schema/analytics-schema";
 export {
-  Account,
-  AccountRelations,
-  CreatePostSchema,
-  Post,
-  Session,
-  SessionRelations,
-  User,
-  UserRelations,
-} from "./schema/example";
-
+  albumIndexes,
+  albums,
+  blogNotes,
+  blogs,
+  comments,
+} from "./schema/blog-schema";
 export {
-  School,
-  CreateSchoolSchema,
-  AcademicSession,
-  AcademicTerm,
-} from "./schema/school-schema";
+  albumRelations,
+  blogRelations,
+  commentRelations,
+  notificationRelations,
+  tagRelations,
+  userRelations,
+} from "./schema/relation-schema";
+export { blogTags, searchLogs, tags } from "./schema/tag-schema";
 export {
-  CreateStudentSchema,
-  Student,
-  StudentSessionForm,
-  Guardian,
-} from "./schema/student-schema";
-export {
-  Book,
-  BookTransaction,
-  PurchasedBook,
-  SchoolWallet,
-  StudentTransaction,
-  Transaction,
-} from "./schema/accounting-schema";
+  mediaAuthors,
+  notifications,
+  telegramChannels,
+  users,
+} from "./schema/user-schema.js";

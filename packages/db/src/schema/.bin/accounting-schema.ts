@@ -1,7 +1,7 @@
 import { decimal, pgTable, varchar } from "drizzle-orm/pg-core";
 
-import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
-import { AcademicTerm, School } from "./school-schema";
+import { __uuidPri, _uuidRel, timeStamps } from "../schema-helper";
+import { AcademicTerm, School } from "../school-schema";
 import { StudentSessionForm } from "./student-schema";
 import { User } from "./user-schema";
 

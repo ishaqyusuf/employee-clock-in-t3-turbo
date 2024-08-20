@@ -1,8 +1,8 @@
 import { boolean, pgTable, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
+import { __uuidPri, _uuidRel, timeStamps } from "../schema-helper";
 import { SessionClassRoom } from "./classroom-schema";
-import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
 import { School } from "./school-schema";
 
 export const Guardian = pgTable("guardian", {

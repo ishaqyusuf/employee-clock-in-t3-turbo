@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export const fetchCache = "force-no-store";
 
-const token = env.TELEGRAM_BOT_TOKEN;
+const token = env.TELEGRAM_TOKEN;
 
 if (!token)
   throw new Error("TELEGRAM_BOT_TOKEN environment variable not found.");

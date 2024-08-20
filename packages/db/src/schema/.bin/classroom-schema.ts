@@ -1,7 +1,7 @@
 import { integer, pgTable, varchar } from "drizzle-orm/pg-core";
 
-import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
-import { AcademicSession, School } from "./school-schema";
+import { __uuidPri, _uuidRel, timeStamps } from "../schema-helper";
+import { AcademicSession, School } from "../school-schema";
 import { User } from "./user-schema";
 
 export const ClassRoom = pgTable("classroom", {
