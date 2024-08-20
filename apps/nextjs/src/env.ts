@@ -18,6 +18,7 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().url(),
+    TELEGRAM_BOT_TOKEN: z.string().url(),
   },
 
   /**
