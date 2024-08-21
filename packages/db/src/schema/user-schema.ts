@@ -9,10 +9,10 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
+import { __serialPri, _serialRel, timeStamps } from "./schema-helper";
 
 export const User = pgTable("users", {
-  id: __uuidPri,
+  id: __serialPri,
   name: text("name").notNull(),
   email: text("email").unique().notNull(),
   emailVerified: timestamp("emailVerified", {
@@ -26,21 +26,23 @@ export const User = pgTable("users", {
 });
 
 export const MediaAuthor = pgTable("media_author", {
-  id: __uuidPri,
+  id: __serialPri,
   name: text("name").notNull(),
   meta: text("meta"),
   ...timeStamps,
 });
 
 export const TelegramChannel = pgTable("telegram_channel", {
-  id: __uuidPri,
-  name: text("name").notNull(),
+  id: __serialPri,
+  title: text("name").notNull(),
+  username: text("username").notNull(),
+  type: text("type").notNull(),
   meta: text("meta"),
   ...timeStamps,
 });
 export const Notification = pgTable("Notification", {
-  id: __uuidPri,
-  userId: _uuidRel("user_id", User.id),
+  id: __serialPri,
+  userId: _serialRel("user_id", User.id),
   message: text("message").notNull(),
   type: varchar("type", { length: 20 }).notNull(), // e.g., "blog_update", "note_published"
   isRead: boolean("is_read").default(false),

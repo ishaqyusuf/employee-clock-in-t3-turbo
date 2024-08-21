@@ -1,9 +1,10 @@
 import { Bot, webhookCallback } from "grammy";
 
 import { db } from "@acme/db/client";
-import { Blogs } from "@acme/db/schema";
+import { Blog } from "@acme/db/schema";
 
 import { env } from "~/env";
+import { getAuthor, telegramPrompt } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,27 @@ const bot = new Bot(token);
 console.log("HELLO MESSAGED!!!!");
 bot.on("message", async (ctx) => {
   console.log(`MSG:`, ctx.message);
+
+  const author = await getAuthor();
+  console.log({ author });
+  const { forward_origin, audio, photo, caption, date, message_id, text } =
+    ctx.message;
+  console.log(text);
+  const prompt = text?.split("\n");
+  if (prompt?.startsWith("/")) {
+    const msg = await telegramPrompt(prompt.split("/")[1]);
+    await ctx.reply(msg, {
+      reply_parameters: {
+        message_id: ctx.msgId,
+        chat_id: ctx.chatId,
+      },
+    });
+    return;
+  }
+  if (photo?.length) {
+  }
+  if (audio) {
+  }
   await ctx.reply(JSON.stringify(ctx.message), {
     reply_parameters: {
       message_id: ctx.msgId,

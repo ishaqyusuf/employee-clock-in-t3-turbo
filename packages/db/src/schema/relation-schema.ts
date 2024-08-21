@@ -1,6 +1,14 @@
 import { relations } from "drizzle-orm";
 
-import { Album, AlbumIndex, BlogNote, Blogs, Comment } from "./blog-schema";
+import {
+  Album,
+  AlbumIndex,
+  Blog,
+  BlogAudio,
+  BlogImage,
+  BlogNote,
+  Comment,
+} from "./blog-schema";
 import { BlogTag, Tag } from "./tag-schema";
 import {
   Account,
@@ -13,25 +21,35 @@ import {
 
 // Adjust imports based on your project structure
 
-export const BlogRelations = relations(Blogs, ({ one, many }) => ({
+export const BlogRelations = relations(Blog, ({ one, many }) => ({
   author: one(User, {
-    fields: [Blogs.authorId],
+    fields: [Blog.authorId],
     references: [User.id],
   }),
-  mediaAuthor: one(MediaAuthor, {
-    fields: [Blogs.mediaAuthorId],
-    references: [MediaAuthor.id],
-  }),
   telegramChannel: one(TelegramChannel, {
-    fields: [Blogs.telegramChannelId],
+    fields: [Blog.telegramChannelId],
     references: [TelegramChannel.id],
   }),
+  audio: one(BlogAudio, {
+    fields: [Blog.audioId],
+    references: [BlogAudio.id],
+  }),
   notes: many(BlogNote),
-  Tag: many(BlogTag),
+  images: many(BlogImage),
+  tags: many(BlogTag),
 }));
-
+export const BlogAudioRelations = relations(BlogAudio, ({ one }) => ({
+  author: one(MediaAuthor, {
+    fields: [BlogAudio.authorId],
+    references: [MediaAuthor.id],
+  }),
+  album: one(Album, {
+    fields: [BlogAudio.albumId],
+    references: [Album.id],
+  }),
+}));
 export const UserRelation = relations(User, ({ many }) => ({
-  Blogs: many(Blogs),
+  Blogs: many(Blog),
   notes: many(BlogNote),
 }));
 
@@ -40,16 +58,17 @@ export const AlbumRelation = relations(Album, ({ one, many }) => ({
     fields: [Album.mediaAuthorId],
     references: [MediaAuthor.id],
   }),
-  AlbumIndex: many(AlbumIndex),
+  albumIndices: many(AlbumIndex),
+  audios: many(BlogAudio),
 }));
 
 export const TagRelation = relations(Tag, ({ many }) => ({
   BlogTag: many(BlogTag),
 }));
 export const CommentRelation = relations(Comment, ({ one }) => ({
-  blog: one(Blogs, {
+  blog: one(Blog, {
     fields: [Comment.blogId],
-    references: [Blogs.id],
+    references: [Blog.id],
   }),
   user: one(User, {
     fields: [Comment.userId],

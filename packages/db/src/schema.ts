@@ -3,7 +3,9 @@ export {
   AlbumIndex,
   Album,
   BlogNote,
-  Blogs,
+  Blog,
+  BlogAudio,
+  BlogImage,
   Comment,
 } from "./schema/blog-schema";
 export {
@@ -15,6 +17,7 @@ export {
   UserRelation,
   SessionRelations,
   AccountRelations,
+  BlogAudioRelations,
 } from "./schema/relation-schema";
 export { BlogTag, SearchLog, Tag } from "./schema/tag-schema";
 export {
