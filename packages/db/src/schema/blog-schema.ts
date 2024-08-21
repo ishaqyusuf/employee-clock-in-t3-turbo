@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { __serialPri, _serialRel, timeStamps } from "./schema-helper";
+import { __serialPri, _serialRel, _uuidRel, timeStamps } from "./schema-helper";
 import { MediaAuthor, TelegramChannel, User } from "./user-schema";
 
 export const Album = pgTable("album", {
@@ -47,7 +47,7 @@ export const Blog = pgTable("blog", {
   status: varchar("status", { length: 20 }).notNull(),
   published: boolean("published").notNull().default(false),
   meta: text("meta"),
-  authorId: _serialRel("author_id", User.id, false),
+  authorId: _uuidRel("author_id", User.id, false),
   audioId: _serialRel("audio_id", BlogAudio.id, false),
   publishedAt: timestamp("published_at"),
   telegramDate: integer("date"),
@@ -71,7 +71,7 @@ export const BlogImage = pgTable("blog_image", {
 
 export const BlogNote = pgTable("blog_note", {
   id: __serialPri,
-  userId: _serialRel("user_id", User.id),
+  userId: _uuidRel("user_id", User.id),
   note: text("note").notNull(),
   blogId: _serialRel("blog_id", Blog.id),
   status: varchar("status", { length: 20 }).notNull(),
@@ -82,7 +82,7 @@ export const BlogNote = pgTable("blog_note", {
 export const Comment = pgTable("comments", {
   id: __serialPri,
   blogId: _serialRel("blog_id", Blog.id),
-  userId: _serialRel("user_id", User.id),
+  userId: _uuidRel("user_id", User.id),
   content: text("content").notNull(),
   status: varchar("status", { length: 20 }).notNull(), // e.g., "approved", "pending", "rejected"
   ...timeStamps,

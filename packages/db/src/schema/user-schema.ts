@@ -9,10 +9,15 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { __serialPri, _serialRel, timeStamps } from "./schema-helper";
+import {
+  __serialPri,
+  __uuidPri,
+  _serialRel,
+  timeStamps,
+} from "./schema-helper";
 
 export const User = pgTable("users", {
-  id: __serialPri,
+  id: __uuidPri,
   name: text("name").notNull(),
   email: text("email").unique().notNull(),
   emailVerified: timestamp("emailVerified", {

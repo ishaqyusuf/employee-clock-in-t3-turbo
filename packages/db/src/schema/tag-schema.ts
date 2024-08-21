@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { Blog } from "./blog-schema";
-import { __serialPri, _serialRel, timeStamps } from "./schema-helper";
+import { __serialPri, _serialRel, _uuidRel, timeStamps } from "./schema-helper";
 import { User } from "./user-schema";
 
 export const Tag = pgTable("tags", {
@@ -18,7 +18,7 @@ export const BlogTag = pgTable("blog_tag", {
 });
 export const SearchLog = pgTable("search_log", {
   id: __serialPri,
-  userId: _serialRel("user_id", User.id), // Optional for logged-in users
+  userId: _uuidRel("user_id", User.id), // Optional for logged-in users
   searchTerm: text("search_term").notNull(),
   searchedAt: timestamp("searched_at").notNull().defaultNow(),
   ...timeStamps,
