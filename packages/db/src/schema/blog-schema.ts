@@ -1,11 +1,13 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
 
 import { __serialPri, _serialRel, _uuidRel, timeStamps } from "./schema-helper";
 import { MediaAuthor, TelegramChannel, User } from "./user-schema";
@@ -13,7 +15,7 @@ import { MediaAuthor, TelegramChannel, User } from "./user-schema";
 export const Album = pgTable("album", {
   id: __serialPri,
   name: text("name").notNull(),
-  mediaAuthorId: _serialRel("media_author_id", MediaAuthor.id),
+  mediaAuthorId: _serialRel("media_author_id", MediaAuthor.id, false),
   ...timeStamps,
 });
 export const BlogAudio = pgTable("blog_audio", {
@@ -40,13 +42,17 @@ export const AlbumIndex = pgTable("album_index", {
 });
 export const Blog = pgTable("blog", {
   id: __serialPri,
-  telegramId: varchar("telegram_id", { length: 50 }).notNull(),
+  telegramMessageId: integer("telegram_message_id"),
   // mediaType: varchar("media_type", { length: 20 }).notNull(),
-  title: text("title").notNull(),
+  blogType: varchar("blog_type", {
+    length: 20,
+    enum: ["text", "audio", "image"],
+  }),
+  title: text("title"),
   description: text("description"),
-  status: varchar("status", { length: 20 }).notNull(),
-  published: boolean("published").notNull().default(false),
-  meta: text("meta"),
+  status: varchar("status", { length: 20 }),
+  published: boolean("published").default(false),
+  meta: jsonb("meta").default({}),
   authorId: _uuidRel("author_id", User.id, false),
   audioId: _serialRel("audio_id", BlogAudio.id, false),
   publishedAt: timestamp("published_at"),
@@ -61,21 +67,21 @@ export const Blog = pgTable("blog", {
 export const BlogImage = pgTable("blog_image", {
   id: __serialPri,
   fileId: varchar("file_id", { length: 200 }),
-  duration: integer("width"),
+  width: integer("width"),
   height: integer("height"),
   blogId: _serialRel("blog_id", Blog.id),
   fileUniqueId: varchar("file_unique_id", { length: 50 }),
   fileSize: integer("file_size"),
   ...timeStamps,
 });
-
+export const CreateBlogImageSchema = createInsertSchema(BlogImage);
 export const BlogNote = pgTable("blog_note", {
   id: __serialPri,
   userId: _uuidRel("user_id", User.id),
   note: text("note").notNull(),
   blogId: _serialRel("blog_id", Blog.id),
-  status: varchar("status", { length: 20 }).notNull(),
-  published: boolean("published").notNull().default(false),
+  status: varchar("status", { length: 20 }),
+  published: boolean("published").default(false),
   ...timeStamps,
 });
 

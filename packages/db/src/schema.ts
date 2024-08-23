@@ -6,6 +6,7 @@ export {
   Blog,
   BlogAudio,
   BlogImage,
+  CreateBlogImageSchema,
   Comment,
 } from "./schema/blog-schema";
 export {

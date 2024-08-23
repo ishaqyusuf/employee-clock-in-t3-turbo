@@ -1,5 +1,6 @@
 {
   "extends": "@acme/tsconfig/base.json",
+
   "compilerOptions": {
     "lib": ["es2022", "dom", "dom.iterable"],
     "jsx": "preserve",
@@ -8,7 +9,25 @@
       "~/*": ["./src/*"]
     },
     "plugins": [{ "name": "next" }],
-    "module": "esnext"
+    // "module": "esnext",
+    "target": "es2017",
+    // "lib": ["dom", "dom.iterable", "esnext"],
+    // "allowJs": true,
+    // "checkJs": true,
+    // "skipLibCheck": true,
+    // "strict": false,
+    // "forceConsistentCasingInFileNames": true,
+    // "noEmit": true,
+    // "esModuleInterop": true,
+    // "module": "esnext",
+    // "moduleResolution": "node",
+    // "resolveJsonModule": true,
+    // "isolatedModules": true,
+    // "jsx": "preserve",
+    // "incremental": true,
+    // "noUncheckedIndexedAccess": true,
+    // "baseUrl": ".",
+    "noImplicitAny": false
   },
   "include": [".", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

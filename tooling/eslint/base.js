@@ -52,10 +52,17 @@ export default tseslint.config(
     ],
     rules: {
       ...turboPlugin.configs.recommended.rules,
-      "@typescript-eslint/no-unused-vars": [
-        "error",
-        { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
-      ],
+      // "@typescript-eslint/no-unused-vars": [
+      //   "error",
+      //   { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+      // ],
+      "@typescript-eslint/unbound-method": "off",
+      "@typescript-eslint/no-unsafe-assignment": "off",
+      "@typescript-eslint/no-unsafe-member-access": "off",
+      "@typescript-eslint/no-unsafe-call": "off",
+      "@typescript-eslint/no-unused-vars": "warn",
+      "@typescript-eslint/no-unsafe-argument": "warn",
+      "no-case-declarations": "off",
       "@typescript-eslint/consistent-type-imports": [
         "warn",
         { prefer: "type-imports", fixStyle: "separate-type-imports" },

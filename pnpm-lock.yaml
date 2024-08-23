@@ -242,6 +242,9 @@ importers:
       '@acme/validators':
         specifier: workspace:*
         version: link:../../packages/validators
+      '@grammyjs/menu':
+        specifier: ^1.2.2
+        version: 1.2.2(grammy@1.29.0)
       '@t3-oss/env-nextjs':
         specifier: ^0.10.1
         version: 0.10.1(typescript@5.5.3)(zod@3.23.8)
@@ -565,7 +568,7 @@ importers:
         version: 7.35.0(eslint@9.7.0)
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-6ebfd5b0-20240818(eslint@9.7.0)
+        version: 5.1.0-rc-eb3ad065-20240822(eslint@9.7.0)
       eslint-plugin-turbo:
         specifier: ^2.0.8
         version: 2.0.8(eslint@9.7.0)
@@ -2014,6 +2017,12 @@ packages:
 
   '@floating-ui/utils@0.2.4':
     resolution: {integrity: sha512-dWO2pw8hhi+WrXq1YJy2yCuWoL20PddgGaqTgVe4cOS9Q6qklXCiA1tJEqX6BEwRNSCP84/afac9hd4MS+zEUA==}
+
+  '@grammyjs/menu@1.2.2':
+    resolution: {integrity: sha512-qrlGn9KFoy9ivVkC4wQnuCpgWc59VzDdj7r7szt432UnddKPk8NZDwVE1HDiaNnuyDV0K58OCp165dXrijmLWw==}
+    engines: {node: '>=12.20.0 || >=14.13.1'}
+    peerDependencies:
+      grammy: ^1.0.0
 
   '@grammyjs/types@3.13.0':
     resolution: {integrity: sha512-Oyq6fBuVPyX6iWvxT/0SxJvNisC9GHUEkhZ60qJBHRmwNX4hIcOfhrNEahicn3K9SYyreGPVw3d9wlLRds83cw==}
@@ -4567,8 +4576,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
 
-  eslint-plugin-react-hooks@5.1.0-rc-6ebfd5b0-20240818:
-    resolution: {integrity: sha512-6eErqy/1hus0qhGvPSVOYqHTB63lntNMcYmx4q2p//Zg6ExF3kYftlG2Heh5FEMPGQ/UqxERmZeqBx8kBW26ow==}
+  eslint-plugin-react-hooks@5.1.0-rc-eb3ad065-20240822:
+    resolution: {integrity: sha512-0kRgi63o6UVkYeo1aePMQuuN20HnfIqMl7Ol/VOwY7UectPexCmZp9AcmGmQ8JTnBomO8/B9Y2zbcrUSeajX0w==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -10009,6 +10018,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.4': {}
 
+  '@grammyjs/menu@1.2.2(grammy@1.29.0)':
+    dependencies:
+      grammy: 1.29.0
+
   '@grammyjs/types@3.13.0': {}
 
   '@graphql-typed-document-node/core@3.2.0(graphql@15.8.0)':
@@ -12939,7 +12952,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-6ebfd5b0-20240818(eslint@9.7.0):
+  eslint-plugin-react-hooks@5.1.0-rc-eb3ad065-20240822(eslint@9.7.0):
     dependencies:
       eslint: 9.7.0
 

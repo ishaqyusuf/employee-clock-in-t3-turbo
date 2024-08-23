@@ -1,6 +1,7 @@
 import {
   boolean,
   integer,
+  jsonb,
   pgTable,
   primaryKey,
   text,
@@ -25,24 +26,25 @@ export const User = pgTable("users", {
     withTimezone: true,
   }),
   image: varchar("image", { length: 255 }),
-  password: text("password").notNull(),
-  role: varchar("role", { length: 20 }).notNull(), // e.g., "admin", "editor", "viewer"
-  status: varchar("status", { length: 20 }).notNull(),
+  password: text("password"),
+  role: varchar("role", { length: 20 }), // e.g., "admin", "editor", "viewer"
+  status: varchar("status", { length: 20 }),
 });
 
 export const MediaAuthor = pgTable("media_author", {
   id: __serialPri,
   name: text("name").notNull(),
-  meta: text("meta"),
+  meta: jsonb("meta").default({}),
   ...timeStamps,
 });
 
 export const TelegramChannel = pgTable("telegram_channel", {
   id: __serialPri,
-  title: text("name").notNull(),
-  username: text("username").notNull(),
+  title: varchar("name").notNull(),
+  username: varchar("username"),
+  channelId: varchar("channel_id"),
   type: text("type").notNull(),
-  meta: text("meta"),
+  meta: jsonb("meta").default({}),
   ...timeStamps,
 });
 export const Notification = pgTable("Notification", {

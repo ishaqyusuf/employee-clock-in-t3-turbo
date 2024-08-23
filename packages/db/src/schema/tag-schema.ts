@@ -20,6 +20,5 @@ export const SearchLog = pgTable("search_log", {
   id: __serialPri,
   userId: _uuidRel("user_id", User.id), // Optional for logged-in users
   searchTerm: text("search_term").notNull(),
-  searchedAt: timestamp("searched_at").notNull().defaultNow(),
   ...timeStamps,
 });
