@@ -12,16 +12,31 @@ import { createInsertSchema } from "drizzle-zod";
 import { __serialPri, _serialRel, _uuidRel, timeStamps } from "./schema-helper";
 import { MediaAuthor, TelegramChannel, User } from "./user-schema";
 
+export const Thumbnail = pgTable("thumbnail", {
+  id: __serialPri,
+  fileId: varchar("file_id", { length: 200 }),
+  width: integer("width"),
+  height: integer("height"),
+  fileUniqueId: varchar("file_unique_id", { length: 50 }),
+  fileSize: integer("file_size"),
+  ...timeStamps,
+});
 export const Album = pgTable("album", {
   id: __serialPri,
   name: text("name").notNull(),
+  albumType: varchar("album_type", {
+    length: 200,
+    enum: ["series", "conference"],
+  }),
   mediaAuthorId: _serialRel("media_author_id", MediaAuthor.id, false),
+  thumbnailId: _serialRel("thumbnail_id", Thumbnail.id, false),
   ...timeStamps,
 });
+
 export const BlogAudio = pgTable("blog_audio", {
   id: __serialPri,
   fileId: varchar("file_id", { length: 200 }),
-  mimeType: varchar("file_id", { length: 200 }),
+  mimeType: varchar("mime_type", { length: 200 }),
   performer: text("performer"),
   title: text("title"),
   fileName: text("file_name"),
@@ -30,6 +45,7 @@ export const BlogAudio = pgTable("blog_audio", {
   authorId: _serialRel("author_id", MediaAuthor.id, false),
   fileSize: integer("file_size"),
   albumId: _serialRel("album_id", Album.id, false),
+  thumbnailId: _serialRel("thumbnail_id", Thumbnail.id, false),
   ...timeStamps,
 });
 
@@ -74,6 +90,7 @@ export const BlogImage = pgTable("blog_image", {
   fileSize: integer("file_size"),
   ...timeStamps,
 });
+export const CreateBlogSchema = createInsertSchema(Blog);
 export const CreateBlogImageSchema = createInsertSchema(BlogImage);
 export const BlogNote = pgTable("blog_note", {
   id: __serialPri,

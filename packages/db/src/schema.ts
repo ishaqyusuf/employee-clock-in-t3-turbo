@@ -8,6 +8,8 @@ export {
   BlogImage,
   CreateBlogImageSchema,
   Comment,
+  Thumbnail,
+  CreateBlogSchema,
 } from "./schema/blog-schema";
 export {
   AlbumRelation,

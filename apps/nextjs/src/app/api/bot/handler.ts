@@ -1,4 +1,6 @@
 export async function handleError(ctx, fn) {
+  // await fn();
+  // return;
   try {
     await fn();
   } catch (error) {
@@ -16,3 +18,4 @@ export async function handleError(ctx, fn) {
     }
   }
 }
+export const first = <T>(arr: T[]): T | undefined => arr[0];

@@ -1,10 +1,8 @@
-import {
-  InlineKeyboard,
-  InlineQueryResultBuilder,
-  webhookCallback,
-} from "grammy";
+import { InlineKeyboard, webhookCallback } from "grammy";
 
+import { createAudioBlog } from "./actions";
 import { bot } from "./bot";
+import { albumCmdFns, albumCmds } from "./cmd/album-cmd";
 import { authorCmdFns, authorCmds } from "./cmd/author-cmd";
 import { handleError } from "./handler";
 
@@ -12,6 +10,11 @@ export const dynamic = "force-dynamic";
 
 export const fetchCache = "force-no-store";
 
+await bot.api.setMyCommands([
+  { command: "start", description: "Start the bot" },
+  { command: "help", description: "Show help text" },
+  { command: "settings", description: "Open settings" },
+]);
 let session = {};
 export const cmd = {
   cmdIndex: -1,
@@ -84,27 +87,9 @@ function suggestCommands(queryText) {
       description: `Select "${name}" as your name`,
     }));
 }
-// bot.inlineQuery(async (ctx) => {
-//   const queryText = ctx.inlineQuery.query.toLowerCase();
-
-//   await ctx.answerInlineQuery(suggestions);
-// });
-// bot.on("inline_query", async (ctx) => {
-//   const userInput = ctx.inlineQuery.query.trim();
-//   console.log(">>>>INLINE");
-//   // If the user input is empty, return no results
-//   if (!userInput) {
-//     return await ctx.answerInlineQuery([]);
-//   }
-
-//   // Get command suggestions
-//   const suggestions = suggestCommands(userInput);
-
-//   // Answer the inline query with suggestions
-//   await ctx.answerInlineQuery(suggestions);
-// });
 const availableCommands = [
   ...authorCmds,
+  ...albumCmds,
   // Add more commands as needed
 ] as const;
 let currentCmd: {
@@ -112,13 +97,14 @@ let currentCmd: {
 } = null as any;
 const cmdFns = {
   ...authorCmdFns,
+  ...albumCmdFns,
 };
 bot.command("cmd", async (ctx) => {
   const cmds = new InlineKeyboard();
   currentCmd = null;
   availableCommands.map((c, i) => {
     cmds.text(c, c);
-    if (i % 2 == 0 && i > 0) cmds.row();
+    if (i % 2 == 0) cmds.row();
   });
   await cmd.registerCmd(
     ctx,
@@ -137,8 +123,8 @@ bot.command("end", async (ctx) => {
 });
 bot.on("callback_query:data", async (ctx) => {
   const d = ctx.callbackQuery.data;
-  // console.log({ d });
-  if (!currentCmd) {
+  const isRoot = availableCommands.includes(d);
+  if (isRoot || !currentCmd) {
     currentCmd = {
       cmd: d,
     };
@@ -161,8 +147,22 @@ bot.on("message:text", async (ctx) => {
     // ctx.message.text
   }
 });
-const callbackFields = ["authorTitle", "custom_title"] as const;
-type CallbackFields = (typeof callbackFields)[number];
+bot.on("message:photo", async (ctx) => {
+  console.log(">PHOTO");
+  // ctx.message.audio
+});
+bot.on("message:audio", async (ctx) => {
+  await handleError(ctx, async () => {
+    const resp = await createAudioBlog(ctx.message);
+    await ctx.reply(resp, {
+      reply_parameters: {
+        message_id: ctx.msgId,
+        chat_id: ctx.chatId,
+      },
+    });
+  });
+  // ctx.message.audio
+});
 // bot.on("message:text", async (ctx) => {
 //   if (ctx.message.text.startsWith("/")) return;
 //   const userId = ctx.from.id;
@@ -180,27 +180,7 @@ type CallbackFields = (typeof callbackFields)[number];
 //     // );
 //   }
 // });
-bot.on("message:audio", async (ctx) => {
-  // ctx.message.audio
-});
-bot.on("callback_query:data", async (ctx) => {
-  const userId = ctx.from.id;
-  const data = ctx.callbackQuery.data;
-  const [field, value] = data.split(":") as [CallbackFields, string];
-  if (field == "custom_title") {
-    await ctx.reply("Title:");
 
-    return;
-  }
-  session[userId][field] = value;
-  switch (field) {
-    case "authorTitle":
-      break;
-  }
-
-  if (data.startsWith("authorTitle:")) {
-  }
-});
 // bot.on(":text", async (ctx) => {
 //   await handleError(ctx, async () => {
 //     console.log(`MSG:`, ctx.message);
@@ -241,4 +221,23 @@ bot.on("callback_query:data", async (ctx) => {
 // bot.on('message')
 // bot.on("msg:audio", async (ctx) => {});
 
+// bot.inlineQuery(async (ctx) => {
+//   const queryText = ctx.inlineQuery.query.toLowerCase();
+
+//   await ctx.answerInlineQuery(suggestions);
+// });
+// bot.on("inline_query", async (ctx) => {
+//   const userInput = ctx.inlineQuery.query.trim();
+//   console.log(">>>>INLINE");
+//   // If the user input is empty, return no results
+//   if (!userInput) {
+//     return await ctx.answerInlineQuery([]);
+//   }
+
+//   // Get command suggestions
+//   const suggestions = suggestCommands(userInput);
+
+//   // Answer the inline query with suggestions
+//   await ctx.answerInlineQuery(suggestions);
+// });
 export const POST = webhookCallback(bot, "std/http");

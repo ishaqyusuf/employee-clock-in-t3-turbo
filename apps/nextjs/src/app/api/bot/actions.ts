@@ -1,6 +1,8 @@
 import type { Message } from "grammy/types";
+import type { z } from "zod";
 
-import { eq } from "@acme/db";
+import type { CreateBlogSchema } from "@acme/db/schema";
+import { eq, sql } from "@acme/db";
 import { db } from "@acme/db/client";
 import {
   Album,
@@ -8,6 +10,7 @@ import {
   BlogAudio,
   BlogImage,
   MediaAuthor,
+  Thumbnail,
   User,
 } from "@acme/db/schema";
 
@@ -17,15 +20,89 @@ import {
   getAlbumsPrompt,
 } from "./album.prompt";
 import { telegramChannelId } from "./channel";
+import { first } from "./handler";
 
+type CreateBlogDTO = z.infer<typeof CreateBlogSchema>;
 // import { User } from "@acme/db/schema";
+export async function createThumbnail(msg: Message) {
+  if (msg.audio?.thumbnail) {
+    const { file_id, file_unique_id, height, width, file_size } =
+      msg.audio.thumbnail;
+    const s = first(
+      await db
+        .insert(Thumbnail)
+        .values({
+          fileId: file_id,
+          fileSize: file_size,
+          fileUniqueId: file_unique_id,
+          height: height,
+          width: width,
+        })
+        .onConflictDoNothing({
+          target: [
+            Thumbnail.fileId,
+            Thumbnail.fileUniqueId,
+            Thumbnail.height,
+            Thumbnail.width,
+          ],
+        })
+        .returning(),
+    );
+    return s?.id;
+  }
 
+  return null;
+}
+export async function createAuthor(name) {
+  if (!name) return null;
+  const author = first(
+    await db
+      .insert(MediaAuthor)
+      .values({
+        name,
+      })
+      .onConflictDoNothing({
+        // target: MediaAuthor.name,
+        where: sql`name <> '${name}'`,
+      })
+      .returning(),
+  );
+  return author;
+}
 export async function createAudioBlog(msg: Message) {
+  // return JSON.stringify({
+  //   audio: msg,
+  // });
   if (!msg.audio) return "not an audio";
-  const blog = await createBlog(msg);
+  const thumbnailId = await createThumbnail(msg);
+  const author = await createAuthor(msg.audio.performer);
+  const audio = first(
+    await db
+      .insert(BlogAudio)
+      .values({
+        fileId: msg.audio.file_id,
+        duration: msg.audio.duration,
+        fileSize: msg.audio.file_size,
+        fileName: msg.audio.file_name,
+        mimeType: msg.audio.mime_type,
+        thumbnailId,
+        authorId: author?.id,
+        fileUniqueId: msg.audio.file_unique_id,
+        performer: msg.audio.performer,
+        // performer: msg.audio.thumbnail.
+      })
+      .returning(),
+  );
+  // return `${author?.name}`;
+  if (!audio) return "unable to create";
+  const audioId = audio.id;
+  const blog = await createBlog(msg, {
+    audioId,
+    blogType: "image",
+  });
   if (!blog) return "unable to create";
+  return `Blog created: ${blog.id}\ntitle: ${blog.title}\nauthor: ${author?.name}`;
   // const author = await createAuthor(msg);
-  const s = await db.insert(BlogAudio).values({});
 }
 // async function createAuthor(msg: Message) {
 //   if (msg.audio) {
@@ -44,7 +121,11 @@ export async function createAudioBlog(msg: Message) {
 //   }
 //   return null;
 // }
-export async function createBlog(msg: Message) {
+
+export async function createBlog(
+  msg: Message,
+  extras: Partial<CreateBlogDTO> = {},
+) {
   const channelId = await telegramChannelId(msg);
   const blogs = await db
     .insert(Blog)
@@ -54,6 +135,7 @@ export async function createBlog(msg: Message) {
       title: msg.audio?.title,
       description: msg.caption ?? msg.text,
       telegramDate: msg.date,
+      ...extras,
       // blogType:
     })
     .returning();

@@ -8,6 +8,7 @@ import {
   BlogImage,
   BlogNote,
   Comment,
+  Thumbnail,
 } from "./blog-schema";
 import { BlogTag, Tag } from "./tag-schema";
 import {
@@ -47,6 +48,10 @@ export const BlogAudioRelations = relations(BlogAudio, ({ one }) => ({
     fields: [BlogAudio.albumId],
     references: [Album.id],
   }),
+  thumbnail: one(Thumbnail, {
+    fields: [BlogAudio.thumbnailId],
+    references: [Thumbnail.id],
+  }),
 }));
 export const UserRelation = relations(User, ({ many }) => ({
   Blogs: many(Blog),
@@ -54,6 +59,10 @@ export const UserRelation = relations(User, ({ many }) => ({
 }));
 
 export const AlbumRelation = relations(Album, ({ one, many }) => ({
+  thumbnail: one(Thumbnail, {
+    fields: [Album.thumbnailId],
+    references: [Thumbnail.id],
+  }),
   mediaAuthor: one(MediaAuthor, {
     fields: [Album.mediaAuthorId],
     references: [MediaAuthor.id],
