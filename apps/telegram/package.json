@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@acme/db": "workspace:*",
-    "@acme/ui": "workspace:*",
     "@grammyjs/files": "^1.1.1",
     "@t3-oss/env-nextjs": "^0.10.1",
     "grammy": "^1.29.0",
