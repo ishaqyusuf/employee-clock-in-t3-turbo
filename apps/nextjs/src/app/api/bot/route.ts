@@ -7,7 +7,7 @@ import { authorCmdFns, authorCmds } from "./cmd/author-cmd";
 import { handleError } from "./handler";
 
 export const dynamic = "force-dynamic";
-
+//
 export const fetchCache = "force-no-store";
 
 await bot.api.setMyCommands([

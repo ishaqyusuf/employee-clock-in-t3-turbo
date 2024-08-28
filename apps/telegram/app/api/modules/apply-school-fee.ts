@@ -18,9 +18,7 @@ _ctx.form = composeForm({
       list: [],
     };
   })
-  .addInput("email", async (value, formData, inputType) => {
+  .onInput("email", async (value, formData, inputType) => {
     if (inputType == "custom") throw Error("Custom input not allowed");
   });
-// form.settings.list.name =
-
 export default _ctx.composer;

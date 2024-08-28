@@ -67,7 +67,7 @@ export function composeForm<T extends readonly Field[]>({
     hello(c: FTypes) {
       console.log(c); // Example usage of the parameter
     },
-    addInput(c: FTypes, fn: OnInput) {
+    onInput(c: FTypes, fn: OnInput) {
       settings.onInput[c] = fn;
       return _ctx;
     },
@@ -125,10 +125,13 @@ export const initComposer = (cmdName: CommandNames) => {
       await clearForm();
       return;
     }
+    await renderField(reply);
   }
+  composer.on("message:text", async (ctx) => {
+    //
+  });
   composer.callbackQuery(cbqPattern, async (ctx) => {
     const data = ctx.callbackQuery.data;
-    // if(data?.)
     const [comnd, formk, val] = data.split("|");
     if (comnd != cmdName) return null;
     await settings.on.callbackQuery?.(ctx);
@@ -163,7 +166,7 @@ export const formField = <T extends string>(field: T, title?: string) => {
   return {
     field,
     title,
-  } as const; // Use 'as const' to ensure the returned object is read-only
+  } as const;
 };
 export type FieldTypes2<T extends readonly { field: string }[]> =
   T[number]["field"];
