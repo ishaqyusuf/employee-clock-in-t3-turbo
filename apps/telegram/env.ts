@@ -19,6 +19,7 @@ export const env = createEnv({
     TELEGRAM_TOKEN: z.string(),
     LOG_CHANNEL: z.string(),
     LOG_LEVEL: z.string(),
+    TELEGRAM_WEBHOOK: z.string(),
   },
 
   /**

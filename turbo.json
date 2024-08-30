@@ -52,6 +52,7 @@
     "AUTH_REDIRECT_PROXY_URL",
     "TELEGRAM_TOKEN",
     "AUTH_SECRET",
+    "TELEGRAM_WEBHOOK",
     "PORT"
   ],
   "globalPassThroughEnv": [

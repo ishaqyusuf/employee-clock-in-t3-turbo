@@ -14,7 +14,8 @@ export type CmdContext = CommandContext<Context>;
 export type CallbackQuery = CallbackQueryMiddleware<Context>;
 export type ReplyContext = CmdContext["reply"];
 export const bot = new Bot(env.TELEGRAM_TOKEN);
-await bot.api.setMyCommands(commandList);
+await bot.api.setMyCommands(commandList, {});
+
 bot.catch((err) => {
   const ctx = err.ctx;
   const err_template = `while handling update ${ctx.update.update_id.toString()}`;

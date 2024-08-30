@@ -98,7 +98,7 @@ export async function createAudioBlog(msg: Message) {
   const audioId = audio.id;
   const blog = await createBlog(msg, {
     audioId,
-    blogType: "image",
+    blogType: "audio",
   });
   if (!blog) return "unable to create";
   return `Blog created: ${blog.id}\ntitle: ${blog.title}\nauthor: ${author?.name}`;

@@ -43,7 +43,7 @@ export const TelegramChannel = pgTable("telegram_channel", {
   id: __serialPri,
   title: varchar("name").notNull(),
   username: varchar("username"),
-  channelId: varchar("channel_id"),
+  channelId: integer("channel_id"),
   type: text("type").notNull(),
   meta: jsonb("meta").default({}),
   ...timeStamps,
