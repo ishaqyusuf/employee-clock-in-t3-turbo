@@ -46,7 +46,7 @@
   },
   "globalEnv": [
     "NEXT_PUBLIC_ROOT_DOMAIN",
-    "NEXT_PUBLIC_APP_ROOT_DOMAIN",
+    "APP_ROOT_DOMAIN",
     "AUTH_DISCORD_ID",
     "AUTH_DISCORD_SECRET",
     "AUTH_REDIRECT_PROXY_URL",
@@ -57,7 +57,6 @@
     "VERCEL_URL",
     "TEAM_ID_VERCEL",
     "PROJECT_ID_VERCEL",
-    "NEXT_PUBLIC_APP_ROOT_DOMAIN",
     "PORT"
   ],
   "globalPassThroughEnv": [
