@@ -1,7 +1,5 @@
 import { Suspense } from "react";
 
-import { db } from "@acme/db/client";
-
 import { api, HydrateClient } from "~/trpc/server";
 import { AuthShowcase } from "../_components/auth-showcase";
 
