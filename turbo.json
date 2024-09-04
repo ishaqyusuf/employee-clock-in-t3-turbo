@@ -45,7 +45,6 @@
     }
   },
   "globalEnv": [
-    "POSTGRES_URL",
     "NEXT_PUBLIC_ROOT_DOMAIN",
     "NEXT_PUBLIC_APP_ROOT_DOMAIN",
     "AUTH_DISCORD_ID",
@@ -54,17 +53,18 @@
     "TELEGRAM_TOKEN",
     "AUTH_SECRET",
     "TELEGRAM_WEBHOOK",
+    "POSTGRES_URL",
+    "VERCEL_URL",
     "TEAM_ID_VERCEL",
     "PROJECT_ID_VERCEL",
+    "NEXT_PUBLIC_APP_ROOT_DOMAIN",
     "PORT"
   ],
   "globalPassThroughEnv": [
     "NODE_ENV",
-    "NEXT_PUBLIC_ROOT_DOMAIN",
     "CI",
     "VERCEL",
     "VERCEL_ENV",
-    "VERCEL_URL",
     "npm_lifecycle_event"
   ]
 }

@@ -1,10 +1,11 @@
-import { unstable_cache } from "next/cache";
-import { env } from "@/env.mjs";
-import {
+import type {
   DomainConfigResponse,
   DomainResponse,
   DomainVerificationResponse,
 } from "@/lib/types";
+import { unstable_cache } from "next/cache";
+
+import { env } from "~/env";
 
 export const addDomainToVercel = async (domain: string) => {
   return await fetch(
