@@ -1,8 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { env } from "./env.js";
-
 // export { auth as middleware } from "@acme/auth";
 
 // Or like this if you need to do something here.
@@ -20,7 +18,7 @@ export default async function middleware(req: NextRequest) {
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers
     .get("host")!
-    .replace(".localhost:3008", `.localhost:3008`);
+    .replace(".localhost:4010", `.localhost:4010`);
 
   const searchParams = req.nextUrl.searchParams.toString();
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)

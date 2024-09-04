@@ -1,33 +1,24 @@
-export { BlogLikes, BlogViews } from "./schema/analytics-schema";
-export {
-  AlbumIndex,
-  Album,
-  BlogNote,
-  Blog,
-  BlogAudio,
-  BlogImage,
-  CreateBlogImageSchema,
-  Comment,
-  Thumbnail,
-  CreateBlogSchema,
-} from "./schema/blog-schema";
-export {
-  AlbumRelation,
-  BlogRelations,
-  CommentRelation,
-  NotificationRelation,
-  TagRelation,
-  UserRelation,
-  SessionRelations,
-  AccountRelations,
-  BlogAudioRelations,
-} from "./schema/relation-schema";
-export { BlogTag, SearchLog, Tag } from "./schema/tag-schema";
-export {
-  MediaAuthor,
-  Notification,
-  TelegramChannel,
-  User,
-  Session,
+ export {
   Account,
-} from "./schema/user-schema";
+  Session,
+  User,
+  AccountRelations,
+  SessionRelations,
+  UserRelations,
+} from "./schema/example-schema";
+export {
+  School,
+  AcademicClass,
+  CreateSchoolSchema,
+  AcademicSession,
+  AcademicTerm,
+  ClassSubject,
+  SessionClass,
+  Subjects,
+} from "./schema/school-schema";
+export {
+  CreateStudentSchema,
+  Student,
+  StudentSessionForm,
+  Guardian,
+} from "./schema/student-schema";
