@@ -54,6 +54,8 @@
     "TELEGRAM_TOKEN",
     "AUTH_SECRET",
     "TELEGRAM_WEBHOOK",
+    "TEAM_ID_VERCEL",
+    "PROJECT_ID_VERCEL",
     "PORT"
   ],
   "globalPassThroughEnv": [
