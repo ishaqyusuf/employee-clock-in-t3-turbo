@@ -1,6 +1,8 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { env } from "./env";
+
 // export { auth as middleware } from "@acme/auth";
 
 // Or like this if you need to do something here.
@@ -16,9 +18,8 @@ export default async function middleware(req: NextRequest) {
   const url = req.nextUrl;
 
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
-  const hostname = req.headers
-    .get("host")!
-    .replace(".localhost:4010", `.localhost:4010`);
+  const __hostName = `.${env.APP_ROOT_DOMAIN}`;
+  const hostname = req.headers.get("host")!.replace(__hostName, __hostName);
 
   const searchParams = req.nextUrl.searchParams.toString();
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
@@ -26,7 +27,7 @@ export default async function middleware(req: NextRequest) {
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
   if (
-    hostname === "localhost:4010"
+    hostname === env.APP_ROOT_DOMAIN
     // ||
     // hostname === env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
