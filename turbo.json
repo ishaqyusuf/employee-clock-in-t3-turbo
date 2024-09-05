@@ -57,6 +57,7 @@
     "VERCEL_URL",
     "TEAM_ID_VERCEL",
     "PROJECT_ID_VERCEL",
+    "SERVER_APP_ROOT_DOMAIN",
     "PORT"
   ],
   "globalPassThroughEnv": [

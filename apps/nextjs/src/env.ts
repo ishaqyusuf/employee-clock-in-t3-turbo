@@ -22,6 +22,7 @@ export const env = createEnv({
     VERCEL_URL: z.string().optional(),
     TEAM_ID_VERCEL: z.string(),
     APP_ROOT_DOMAIN: z.string(),
+    SERVER_APP_ROOT_DOMAIN: z.string(),
   },
 
   /**
