@@ -25,15 +25,16 @@ export default async function middleware(req: NextRequest) {
   const path = `${url.pathname}${
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
-  // if (
-  //   hostname === "localhost:7000" ||
-  //   hostname === env.NEXT_PUBLIC_ROOT_DOMAIN
-  // ) {
-  //   // console.log("..");
-  //   return NextResponse.rewrite(
-  //     new URL(`/public${path === "/" ? "" : path}`, req.url),
-  //   );
-  // }
+  if (
+    hostname === "localhost:4010"
+    // ||
+    // hostname === env.NEXT_PUBLIC_ROOT_DOMAIN
+  ) {
+    // console.log("..");
+    return NextResponse.rewrite(
+      new URL(`${path === "/" ? "" : path}`, req.url),
+    );
+  }
   // // console.log(">>>>>>>>>>>>>>>");
   // // rewrite everything else to `/[domain]/[slug] dynamic route
   // console.log(["+++TENANT+++", hostname, path]);
