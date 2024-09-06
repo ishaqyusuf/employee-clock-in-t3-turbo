@@ -5,7 +5,7 @@ import { _data, configs } from "./data";
 export interface IClassResult {
   className: string;
   totalObtainable: number;
-  totalStudents: number;
+  totalstudents: number;
   subjects: string[];
   pageSize: "full" | "half2" | "half";
   results: {
@@ -33,7 +33,7 @@ export default function useDataTransform() {
       return _data.map((d) => {
         const _resp: Partial<IClassResult> = {
           results: [],
-          totalStudents: 0,
+          totalstudents: 0,
           pageSize: d.pageSize,
         };
         _resp.className = d.class;
@@ -41,7 +41,7 @@ export default function useDataTransform() {
         d.rawData.split("\n").map((line, index) => {
           const spl = line
             .replaceAll("،", ",")
-            .replaceAll(".", ",")
+            // .replaceAll(".", ",")
             .split(",")
             .map((c) => c.trim());
           if (index == 0) {
@@ -49,7 +49,7 @@ export default function useDataTransform() {
             _resp.subjects = subjects;
             _resp.totalObtainable = 100 * subjects.length;
           } else {
-            _resp.totalStudents += 1;
+            _resp.totalstudents += 1;
             let totalScore = 0;
             const studentName = spl[0]?.split("-").splice(-1)[0];
             const dotted = studentName.includes(".");
@@ -70,7 +70,7 @@ export default function useDataTransform() {
               subjects: subjects
                 .map((s, i) => {
                   const scoreCol = spl[i + 1];
-                  if (scoreCol && scoreCol.includes(";")) {
+                  if (scoreCol?.includes(";")) {
                     const [s1, s2, s3] = scoreCol.split(";");
                     const total = [s1, s2, s3]
                       .map((s) => Number(s))
@@ -230,7 +230,7 @@ export default function useDataTransform() {
       col(
         "عدد الطلاب في الفصل",
         ({ result, fasl }: RenProps) => (
-          <span>{enToAr(fasl.totalStudents)}</span>
+          <span>{enToAr(fasl.totalstudents)}</span>
         ),
         3,
       ),

@@ -15,7 +15,7 @@ export const bootstrapRouter = {
     //   .insert(AcademicSession)
     //   .values({
     //     name: "1445/1446",
-    //     schoolId: school?.id,
+    //     schoolId:school?.id,
     //   })
     //   .returning();
   }),

@@ -1,90 +1,199 @@
-import { relations, sql } from "drizzle-orm";
-import {
-  integer,
-  pgTable,
-  primaryKey,
-  text,
-  timestamp,
-  uuid,
-  varchar,
-} from "drizzle-orm/pg-core";
+import type { Many, One, Relation } from "drizzle-orm";
+import { relations } from "drizzle-orm"; // Assuming you're using drizzle-orm
 
-// export const Post = pgTable("post", {
-//   id: uuid("id").notNull().primaryKey().defaultRandom(),
-//   title: varchar("name", { length: 256 }).notNull(),
-//   content: text("content").notNull(),
-//   createdAt: timestamp("created_at").defaultNow().notNull(),
-//   updatedAt: timestamp("updatedAt", {
-//     mode: "date",
-//     withTimezone: true,
-//   }).$onUpdateFn(() => sql`now()`),
-// });
+import { transaction } from "./accounting-schema";
+import { workerTermSheet } from "./employee-schema";
+import { user } from "./user-schema";
 
-// export const CreatePostSchema = createInsertSchema(Post, {
-//   title: z.string().max(256),
-//   content: z.string().max(256),
-// }).omit({
-//   id: true,
-//   createdAt: true,
-//   updatedAt: true,
-// });
+export function _relation<T>(table: T) {
+  type TableName = T["_"]["name"];
 
-export const User = pgTable("user", {
-  id: uuid("id").notNull().primaryKey().defaultRandom(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    withTimezone: true,
-  }),
-  image: varchar("image", { length: 255 }),
-});
+  type FormType<T1> = Record<
+    string,
+    {
+      scope: "one" | "many";
+      relation: T1;
+      relationKeys?: keyof T1[]; // Array of keys from the related table
+      referenceKeys?: keyof T[]; // Array of keys from the main table
+    }
+  >;
 
-export const UserRelations = relations(User, ({ many }) => ({
-  accounts: many(Account),
-}));
+  //   const maps = {};
 
-export const Account = pgTable(
-  "account",
-  {
-    userId: uuid("userId")
-      .notNull()
-      .references(() => User.id, { onDelete: "cascade" }),
-    type: varchar("type", { length: 255 })
-      .$type<"email" | "oauth" | "oidc" | "webauthn">()
-      .notNull(),
-    provider: varchar("provider", { length: 255 }).notNull(),
-    providerAccountId: varchar("providerAccountId", { length: 255 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 255 }),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: varchar("token_type", { length: 255 }),
-    scope: varchar("scope", { length: 255 }),
-    id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 255 }),
-  },
-  (account) => ({
-    compoundKey: primaryKey({
-      columns: [account.provider, account.providerAccountId],
-    }),
-  }),
-);
+  const relationNames = [];
+  const maps = {};
+  const __ = {
+    form: {} as FormType<any>,
 
-export const AccountRelations = relations(Account, ({ one }) => ({
-  user: one(User, { fields: [Account.userId], references: [User.id] }),
-}));
+    many<T1>(name: string, manyTable: T1) {
+      __.form[name] = {
+        scope: "many",
+        relation: manyTable,
+      };
+      maps[name] = {} as Many<T1["_"]["name"]>;
+      relationNames.push(name);
+      // register the name and type in maps
+      return __;
+    },
 
-export const Session = pgTable("session", {
-  sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
-  userId: uuid("userId")
-    .notNull()
-    .references(() => User.id, { onDelete: "cascade" }),
-  expires: timestamp("expires", {
-    mode: "date",
-    withTimezone: true,
-  }).notNull(),
-});
+    one<T1>(name: string, oneTable: T1) {
+      const rel: FormType<T1>[number] = {
+        scope: "one",
+        relation: oneTable,
+        referenceKeys: [oneTable.id as keyof T1],
+      };
+      relationNames.push(name);
+      const _ctx = {
+        locals(...keys: (keyof T)[]) {
+          rel.relationKeys = keys;
+          return _ctx;
+        },
+        foreigns(...keys: (keyof T1)[]) {
+          rel.referenceKeys = keys;
+          return _ctx;
+        },
+        ret() {
+          __.form[name] = rel;
+          maps[name] = {} as One<T1["_"]["name"]>;
+          // register the name and type in maps
+          return __;
+        },
+      };
+      return _ctx;
+    },
 
-export const SessionRelations = relations(Session, ({ one }) => ({
-  user: one(User, { fields: [Session.userId], references: [User.id] }),
-}));
+    // Final result function
+    res() {
+      // Record<string, Relation<any>>
+      return relations<TableName, { [id in typeof relationNames]: any }>(
+        table,
+        (r) => {
+          // extracted all generated types in map to create reuslt type
+          // const result: typeof maps = {};
+          const result: typeof maps = {} as typeof maps;
+          // Record<T["_"]["name"], any>
+          Object.entries(__.form).forEach(([key, value]) => {
+            type ScopName = (typeof value.relation)["_"]["name"];
+            //   result[key] = r[value.scope](
+            //     value.relation,
+            //     value.scope === "one"
+            //       ? {
+            //           fields: value.relationKeys?.map((k) => value.relation[k]),
+            //           references: value.referenceKeys?.map((k) => table[k]),
+            //         }
+            //       : {},
+            //   );
+            if (value.scope === "one") {
+              // Type assertion to One<...>
+              result[key] = r.one(value.relation, {
+                fields: value.relationKeys
+                  ? value.relationKeys.map((k) => value.relation[k])
+                  : [],
+                references: value.referenceKeys
+                  ? value.referenceKeys.map((k) => table[k])
+                  : [],
+              }) as One<ScopName, any>; // Adjust generics as necessary
+            } else if (value.scope === "many") {
+              // Type assertion to Many<...>
+              result[key] = r.many(value.relation, {}) as Many<ScopName, any>; // Adjust generics as necessary
+            }
+          });
+          return result;
+        },
+      );
+    },
+  };
+
+  return __;
+}
+
+// Utility function to handle relations
+export function _relation2<T>(table: T) {
+  // Define the types
+  type TableName = T["_"]["name"];
+  type FormType<T1> = Record<
+    string,
+    {
+      scope: "one" | "many";
+      relation: T1;
+      relationKeys?: (keyof T1)[];
+      referenceKeys?: (keyof T)[];
+    }
+  >;
+
+  const __ = {
+    form: {} as FormType<any>,
+
+    // Function for "many" relation
+    many<T1 extends { _name: string }>(name: string, manyTable: T1) {
+      __.form[name] = {
+        scope: "many",
+        relation: manyTable,
+      };
+      return __;
+    },
+
+    // Function for "one" relation
+    one<T1 extends { _name: string }>(name: string, oneTable: T1) {
+      const rel: FormType<T1>[number] = {
+        scope: "one",
+        relation: oneTable,
+        referenceKeys: [oneTable.id as keyof T1],
+      };
+
+      const _ctx = {
+        locals(...keys: (keyof T1)[]) {
+          rel.relationKeys = keys;
+          return _ctx;
+        },
+        foreigns(...keys: (keyof T)[]) {
+          rel.referenceKeys = keys;
+          return _ctx;
+        },
+        ret() {
+          __.form[name] = rel;
+          return __;
+        },
+      };
+      return _ctx;
+    },
+
+    // Final result function that generates Drizzle-compatible relations
+    res() {
+      return relations<TableName, Record<string, Relation<any>>>(table, (r) => {
+        const result: Record<string, Relation<any>> = {};
+        Object.entries(__.form).forEach(([key, value]) => {
+          type ScopName = (typeof value.relation)["_"]["name"];
+          if (value.scope === "one") {
+            // Type assertion to One<...>
+            result[key] = r.one(value.relation, {
+              fields: value.relationKeys
+                ? value.relationKeys.map((k) => value.relation[k])
+                : [],
+              references: value.referenceKeys
+                ? value.referenceKeys.map((k) => table[k])
+                : [],
+            }) as One<ScopName, any>; // Adjust generics as necessary
+          } else if (value.scope === "many") {
+            // Type assertion to Many<...>
+            result[key] = r.many(value.relation, {}) as Many<ScopName, any>; // Adjust generics as necessary
+          }
+          //   result[key] = r[value.scope](
+          //     value.relation,
+          //     value.scope === "one"
+          //       ? {
+          //           fields: value.relationKeys?.map((k) => value.relation[k]),
+          //           references: value.referenceKeys?.map((k) => table[k]),
+          //         }
+          //       : {},
+          //   );
+        });
+        return result;
+      });
+    },
+  };
+
+  return __;
+}
+
+// Example usage of your custom utility function

@@ -23,6 +23,7 @@ export const env = createEnv({
     TEAM_ID_VERCEL: z.string(),
     APP_ROOT_DOMAIN: z.string(),
     SERVER_APP_ROOT_DOMAIN: z.string(),
+    AUTH_BEARER_TOKEN: z.string(),
   },
 
   /**

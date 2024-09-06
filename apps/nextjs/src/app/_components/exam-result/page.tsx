@@ -84,10 +84,10 @@ export default function ExamResult() {
               return (
                 <div
                   className={cn(
-                    "border-t border-dashed border-muted-foreground ",
+                    "border-t border-dashed border-muted-foreground",
                     (isFull || (ri + baseIndex) % 2 != 1) &&
                       "print:border-none",
-                    (ri + baseIndex) % 2 == 1 ? "sbg-blue-50  " : "",
+                    (ri + baseIndex) % 2 == 1 ? "sbg-blue-50" : "",
                     arabic.className,
                     pageSizeVariant({
                       size: data.pageSize,
@@ -144,7 +144,7 @@ export default function ExamResult() {
                   <div className="print-px">
                     <table
                       id="resultTable"
-                      className={cn("w-full ", data.pageSize)}
+                      className={cn("w-full", data.pageSize)}
                     >
                       <thead>
                         <th align="center" className="">
@@ -249,7 +249,7 @@ export default function ExamResult() {
                       .map((_, i) => (
                         <div
                           key={i}
-                          className=" flex justify-end border-b border-dashed border-black/50"
+                          className="flex justify-end border-b border-dashed border-black/50"
                         >
                           {
                             <span
@@ -270,7 +270,7 @@ export default function ExamResult() {
                         </div>
                       ))}
                   </div>
-                  <div className={cn("print-px  flex justify-between pt-8")}>
+                  <div className={cn("print-px flex justify-between pt-8")}>
                     {[configs.directorSignature, configs.teacherSignature].map(
                       (c, ci) => (
                         <div className="relative">
@@ -311,7 +311,7 @@ export default function ExamResult() {
                     <div>Class: {data.className}</div>
                   </th>
                   <th>
-                    <div>Total Students: {data.totalStudents}</div>
+                    <div>Total students: {data.totalstudents}</div>
                   </th>
                 </tr>
               </thead>
