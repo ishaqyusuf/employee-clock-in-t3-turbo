@@ -54,7 +54,7 @@ export const studentTermSheet = pgTable(
     ...timeStamps,
   },
   (t) => ({
-    unq: unique().on(t.sessionSheetId, t.studentId),
+    unq: unique().on(t.sessionSheetId, t.studentId, t.termId),
   }),
 );
 export const StudentTermSheetRelation = relations(

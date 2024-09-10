@@ -1,7 +1,5 @@
 import { db } from "@acme/db/client";
 
-import { first } from "~/lib/lodash";
-
 export default async function ListstudentsPage({ params }) {
   const domain = params.domain?.split(".")[0];
 

@@ -4,9 +4,13 @@ import {
   primaryKey,
   text,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
+import { _uuidRel, timeStamps } from "./schema-helper";
+import { school } from "./school-schema";
 
 // export const Post = pgTable("post", {
 //   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -28,17 +32,25 @@ import {
 //   updatedAt: true,
 // });
 type UserRole = "admin" | "accountant" | "teacher";
-export const user = pgTable("user", {
-  id: uuid("id").notNull().primaryKey().defaultRandom(),
-  name: varchar("name", { length: 255 }),
-  email: varchar("email", { length: 255 }).notNull(),
-  role: varchar("role", { length: 255 }).$type<UserRole>(),
-  emailVerified: timestamp("emailVerified", {
-    mode: "date",
-    withTimezone: true,
+export const user = pgTable(
+  "user",
+  {
+    id: uuid("id").notNull().primaryKey().defaultRandom(),
+    name: varchar("name", { length: 255 }),
+    email: varchar("email", { length: 255 }).notNull(),
+    role: varchar("role", { length: 255 }).$type<UserRole>(),
+    schoolId: _uuidRel("school_id", school.id),
+    emailVerified: timestamp("emailVerified", {
+      mode: "date",
+      withTimezone: true,
+    }),
+    image: varchar("image", { length: 255 }),
+    ...timeStamps,
+  },
+  (t) => ({
+    unq: unique().on(t.email, t.schoolId),
   }),
-  image: varchar("image", { length: 255 }),
-});
+);
 
 export const account = pgTable(
   "account",

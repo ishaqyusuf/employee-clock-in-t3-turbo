@@ -1,6 +1,8 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
+import { eq } from "@acme/db";
+
 import { protectedProcedure, publicProcedure } from "../trpc";
 
 export const postRouter = {
@@ -12,7 +14,7 @@ export const postRouter = {
     //   limit: 10,
     // });
   }),
-
+relatio
   byId: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) => {

@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   jsonb,
@@ -56,12 +57,7 @@ export const academicTerm = pgTable(
     unq: unique().on(t.name, t.schoolId, t.academicSessionId),
   }),
 );
-// export const academicTermRelations = relations(
-//   academicTerm,
-//   ({ one, many }) => ({
-//     sheets: many(studentTermSheet),
-//   }),
-// );
+
 export const academicClass = pgTable(
   "academic_class",
   {

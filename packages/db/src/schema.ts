@@ -1,4 +1,9 @@
 export {
+  account as Account,
+  session as Session,
+  user as User,
+} from "./schema/user-schema";
+export {
   school as School,
   academicClass as AcademicClass,
   createSchoolSchema as CreateSchoolSchema,
@@ -9,11 +14,6 @@ export {
   subjects as Subjects,
   // academicTermRelations,
 } from "./schema/school-schema";
-export {
-  account as Account,
-  session as Session,
-  user as User,
-} from "./schema/user-schema";
 
 export {
   createStudentSchema as CreateStudentSchema,
@@ -44,4 +44,5 @@ export {
   SessionRelations,
   UserRelations,
   EmployeeClassRoleRelations,
+  AcademicTermRelations,
 } from "./schema/relations";

@@ -12,6 +12,7 @@ import {
   StudentSessionSheet,
   StudentTermSheet,
   Subjects,
+  User,
 } from "@acme/db/schema";
 
 import type useDataTransform from "../_components/exam-result/use-data-transform";
@@ -281,7 +282,7 @@ async function createSession(name, school) {
   return session;
 }
 async function createSchool() {
-  const resp = await db
+  const [school] = await db
     .insert(School)
     .values({
       name: configs.schoolName,
@@ -295,6 +296,21 @@ async function createSchool() {
       },
     })
     .returning();
-  const school = first(resp);
+  if (!school) throw new Error("Unable to create school");
+  const [user] = await db
+    .insert(User)
+    .values({
+      email: `ishaqyusuf024@gmail.com`,
+      name: `Ishaq Yusuf`,
+      role: "admin",
+      schoolId: school.id,
+    })
+    .onConflictDoUpdate({
+      target: [User.email, User.schoolId],
+      set: {
+        updatedAt: new Date(),
+      },
+    })
+    .returning();
   return school;
 }

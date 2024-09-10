@@ -5,11 +5,17 @@ import {
   EmployeeService,
   EmployeeSubjectRole,
 } from "./employee-schema";
+import { academicSession, academicTerm, school } from "./school-schema";
+import { studentTermSheet } from "./student-schema";
 import { account, session, user } from "./user-schema";
 
-export const UserRelations = relations(user, ({ many }) => ({
+export const UserRelations = relations(user, ({ many, one }) => ({
   accounts: many(account),
   employeeServices: many(EmployeeService),
+  school: one(school, {
+    fields: [user.id],
+    references: [school.id],
+  }),
 }));
 
 export const AccountRelations = relations(account, ({ one }) => ({
@@ -23,5 +29,16 @@ export const EmployeeClassRoleRelations = relations(
   EmployeeClassRole,
   ({ many }) => ({
     subjectRoles: many(EmployeeSubjectRole),
+  }),
+);
+
+export const AcademicTermRelations = relations(
+  academicTerm,
+  ({ one, many }) => ({
+    sheets: many(studentTermSheet),
+    academicSession: one(academicSession, {
+      fields: [academicTerm.id],
+      references: [academicSession.id],
+    }),
   }),
 );
