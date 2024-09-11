@@ -22,6 +22,7 @@ import { configs } from "../_components/exam-result/data";
 type Data = ReturnType<typeof useDataTransform>["data"];
 export async function bootstrapSchool(data: Data) {
   const school = await createSchool();
+  // BillableService
   //   return school;
   const session = await createSession(`1445/1446`, school);
   //   return session;

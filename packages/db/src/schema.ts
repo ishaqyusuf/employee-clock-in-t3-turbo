@@ -23,13 +23,7 @@ export {
   guardian as Guardian,
   StudentTermSheetRelation,
 } from "./schema/student-schema";
-export {
-  BillableService,
-  EmployeeService,
-  EmployeeClassRole,
-  EmployeeSubjectRole,
-} from "./schema/employee-schema";
-
+export * from "./schema/employee-schema";
 export {
   Assessment,
   AssessmentRelations,

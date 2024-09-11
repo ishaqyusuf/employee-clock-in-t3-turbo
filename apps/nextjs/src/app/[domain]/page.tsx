@@ -1,7 +1,5 @@
-import { Suspense } from "react";
-
-import { api, HydrateClient } from "~/trpc/server";
-import { AuthShowcase } from "../_components/auth-showcase";
+import { HydrateClient } from "~/trpc/server";
+import Dashboard from "./_components/dashboard";
 
 export const runtime = "edge";
 
@@ -13,34 +11,7 @@ export default async function HomePage({ params }) {
 
   return (
     <HydrateClient>
-      <main className="container h-screen py-16">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-primary">T3</span> Turbo
-          </h1>
-          <div className="">
-            {/* {schools.map((s) => (
-              <div id={s.id}>{s.name}</div>
-            ))} */}
-          </div>
-          <AuthShowcase />
-          {/* <Bootstrap />
-          <CreatePostForm /> */}
-          <div className="w-full max-w-2xl overflow-y-scroll">
-            <Suspense
-              fallback={
-                <div className="flex w-full flex-col gap-4">
-                  {/* <PostCardSkeleton />
-                  <PostCardSkeleton />
-                  <PostCardSkeleton /> */}
-                </div>
-              }
-            >
-              {/* <PostList /> */}
-            </Suspense>
-          </div>
-        </div>
-      </main>
+      <Dashboard />
     </HydrateClient>
   );
 }
