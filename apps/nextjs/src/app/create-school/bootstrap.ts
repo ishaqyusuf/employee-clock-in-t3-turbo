@@ -120,7 +120,7 @@ async function createStudentSessionData({
       .insert(StudentSessionSheet)
       .values({
         schoolId,
-        sessionClassId,
+        // sessionClassId,
         studentId: student.id,
       })
       .returning()
@@ -130,7 +130,7 @@ async function createStudentSessionData({
         },
         target: [
           StudentSessionSheet.studentId,
-          StudentSessionSheet.sessionClassId,
+          // StudentSessionSheet.sessionClassId,
           StudentSessionSheet.schoolId,
         ],
       }),
@@ -140,6 +140,7 @@ async function createStudentSessionData({
       .insert(StudentTermSheet)
       .values({
         sessionSheetId: sessionSheet.id,
+        sessionClassId,
         studentId: student.id,
         termId: academicTermId,
       })
@@ -151,6 +152,7 @@ async function createStudentSessionData({
         target: [
           StudentTermSheet.studentId,
           StudentTermSheet.sessionSheetId,
+          StudentTermSheet.sessionClassId,
           StudentTermSheet.termId,
         ],
       }),

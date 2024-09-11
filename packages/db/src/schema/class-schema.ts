@@ -8,7 +8,7 @@ import {
   school,
   sessionClass,
 } from "./school-schema";
-import { studentTermSheet } from "./student-schema";
+import { StudentTermSheet } from "./student-schema";
 import { user } from "./user-schema";
 
 export const Assessment = pgTable("assessments", {
@@ -29,7 +29,7 @@ export const AssessmentResult = pgTable("assessment_result", {
   assessmentId: _uuidRel("assessment_id", Assessment.id),
   score: decimal("score"),
   percentage: decimal("percentage"),
-  studentTermSheetId: _uuidRel("student_term_sheet_id", studentTermSheet.id),
+  studentTermSheetId: _uuidRel("student_term_sheet_id", StudentTermSheet.id),
   ...timeStamps,
 });
 
@@ -53,6 +53,6 @@ export const StudentAttendance = pgTable("student_attendance", {
   present: boolean("present").default(false),
   comment: text("comment"),
   teacherId: _uuidRel("teacher_id", user.id),
-  studentTermSheetId: _uuidRel("student_term_sheet_id", studentTermSheet.id),
+  studentTermSheetId: _uuidRel("student_term_sheet_id", StudentTermSheet.id),
   ...timeStamps,
 });

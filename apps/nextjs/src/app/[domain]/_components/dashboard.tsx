@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import {
   BarChart,
   BookOpen,
@@ -15,6 +16,37 @@ import { Card, CardContent, CardHeader, CardTitle } from "@acme/ui/card";
 
 export default function Dashboard() {
   const currentTerm = "";
+
+  const analyticsCards = [
+    {
+      href: "/students",
+      label: "Total Students",
+      icon: <Users className="h-4 w-4 text-muted-foreground" />,
+      value: "1,234",
+      change: "+10.1% from last term",
+    },
+    {
+      href: "/classes",
+      label: "Total Classes",
+      icon: <BookOpen className="h-4 w-4 text-muted-foreground" />,
+      value: "56",
+      change: "+2 from last term",
+    },
+    {
+      href: "/teachers",
+      label: "Total Teachers",
+      icon: <GraduationCap className="h-4 w-4 text-muted-foreground" />,
+      value: "87",
+      change: "+5 from last term",
+    },
+    {
+      href: "/payments",
+      label: "Total Payments",
+      icon: <DollarSign className="h-4 w-4 text-muted-foreground" />,
+      value: "$567,890",
+      change: "+18.7% from last term",
+    },
+  ];
   return (
     <div className="min-h-screen bg-gray-100">
       {/* Header */}
@@ -37,58 +69,22 @@ export default function Dashboard() {
 
         {/* Analytics Cards */}
         <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Students
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">1,234</div>
-              <p className="text-xs text-muted-foreground">
-                +10.1% from last term
-              </p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Classes
-              </CardTitle>
-              <BookOpen className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">56</div>
-              <p className="text-xs text-muted-foreground">+2 from last term</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Teachers
-              </CardTitle>
-              <GraduationCap className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">87</div>
-              <p className="text-xs text-muted-foreground">+5 from last term</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Total Payments
-              </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">$567,890</div>
-              <p className="text-xs text-muted-foreground">
-                +18.7% from last term
-              </p>
-            </CardContent>
-          </Card>
+          {analyticsCards.map((card) => (
+            <Link href={card.href} key={card.href} className="group">
+              <Card className="transform transition-all duration-300 ease-in-out group-hover:scale-105 group-hover:shadow-lg">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    {card.label}
+                  </CardTitle>
+                  {card.icon}
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{card.value}</div>
+                  <p className="text-xs text-muted-foreground">{card.change}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
         </div>
 
         {/* Chart */}

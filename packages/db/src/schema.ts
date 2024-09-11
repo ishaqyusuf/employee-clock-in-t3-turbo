@@ -15,28 +15,7 @@ export {
   // academicTermRelations,
 } from "./schema/school-schema";
 
-export {
-  createStudentSchema as CreateStudentSchema,
-  student as Student,
-  StudentSessionSheet as StudentSessionSheet,
-  studentTermSheet as StudentTermSheet,
-  guardian as Guardian,
-  StudentTermSheetRelation,
-} from "./schema/student-schema";
+export * from "./schema/student-schema";
 export * from "./schema/employee-schema";
-export {
-  Assessment,
-  AssessmentRelations,
-  AssessmentResult,
-  StudentAttendance,
-  StudentDayAttendance,
-  StudentDayAttendanceRelations,
-} from "./schema/class-schema";
-
-export {
-  AccountRelations,
-  SessionRelations,
-  UserRelations,
-  EmployeeClassRoleRelations,
-  AcademicTermRelations,
-} from "./schema/relations";
+export * from "./schema/class-schema";
+export * from "./schema/relations";

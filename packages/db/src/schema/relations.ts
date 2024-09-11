@@ -5,8 +5,14 @@ import {
   EmployeeService,
   EmployeeSubjectRole,
 } from "./employee-schema";
-import { academicSession, academicTerm, school } from "./school-schema";
-import { studentTermSheet } from "./student-schema";
+import {
+  academicClass,
+  academicSession,
+  academicTerm,
+  school,
+  sessionClass,
+} from "./school-schema";
+import { StudentTermSheet } from "./student-schema";
 import { account, session, user } from "./user-schema";
 
 export const UserRelations = relations(user, ({ many, one }) => ({
@@ -35,10 +41,20 @@ export const EmployeeClassRoleRelations = relations(
 export const AcademicTermRelations = relations(
   academicTerm,
   ({ one, many }) => ({
-    sheets: many(studentTermSheet),
+    sheets: many(StudentTermSheet),
     academicSession: one(academicSession, {
       fields: [academicTerm.id],
       references: [academicSession.id],
+    }),
+  }),
+);
+
+export const SessionClassRelations = relations(
+  sessionClass,
+  ({ one, many }) => ({
+    classRoom: one(academicClass, {
+      fields: [sessionClass.academicClassId],
+      references: [academicClass.id],
     }),
   }),
 );
