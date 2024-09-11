@@ -23,6 +23,7 @@ export async function getStudentList() {
         },
       },
     },
+    orderBy: Student.firstName,
     // orderBy: (sheets,{asc}) => [asc(sheets.)]
   });
   return list;
