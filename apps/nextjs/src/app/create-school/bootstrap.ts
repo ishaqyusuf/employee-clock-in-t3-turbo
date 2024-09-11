@@ -314,3 +314,5 @@ async function createSchool() {
     .returning();
   return school;
 }
+
+export async function createSecondTerm() {}
