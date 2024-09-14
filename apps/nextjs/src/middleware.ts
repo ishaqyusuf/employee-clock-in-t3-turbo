@@ -27,7 +27,7 @@ export default async function middleware(req: NextRequest) {
   }`;
   const isProd = env.NODE_ENV == "production";
   const _url = `/${isProd ? "daarul-hadith" : hostname}${path}`;
-  if (isProd) return NextResponse.rewrite(new URL(url, req.url));
+  if (isProd) return NextResponse.rewrite(new URL(_url, req.url));
   if (
     hostname === env.APP_ROOT_DOMAIN
     // ||
