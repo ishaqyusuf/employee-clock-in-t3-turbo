@@ -4,7 +4,7 @@ import Dashboard from "./_components/dashboard";
 export const runtime = "edge";
 
 export default async function HomePage({ params }) {
-  // const schools = await db.query.school.findMany();
+  // const schools = await db.query.School.findMany();
 
   // You can await this here if you don't want to show Suspense fallback below
   // void api.post.all.prefetch();

@@ -2,14 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  BarChart,
-  BookOpen,
-  DollarSign,
-  GraduationCap,
-  Menu,
-  Users,
-} from "lucide-react";
+import { BookOpen, DollarSign, GraduationCap, Menu, Users } from "lucide-react";
 
 import { Button } from "@acme/ui/button";
 import {
@@ -26,7 +19,7 @@ import {
   SelectValue,
 } from "@acme/ui/select";
 
-export default function Header({}) {
+export default function Header() {
   const navItems = [
     {
       href: "/students",
@@ -34,18 +27,28 @@ export default function Header({}) {
       icon: <Users className="mr-2 h-4 w-4" />,
     },
     {
-      href: "/payments",
-      label: "Payments",
+      href: "/transactions",
+      label: "Transactions",
       icon: <DollarSign className="mr-2 h-4 w-4" />,
     },
     {
-      href: "/classes",
-      label: "Classes",
+      href: "/class-rooms",
+      label: "Class Rooms",
       icon: <BookOpen className="mr-2 h-4 w-4" />,
     },
     {
-      href: "/teachers",
-      label: "Teachers",
+      href: "/staffs",
+      label: "Staffs",
+      icon: <GraduationCap className="mr-2 h-4 w-4" />,
+    },
+    {
+      href: "/services",
+      label: "Services",
+      icon: <GraduationCap className="mr-2 h-4 w-4" />,
+    },
+    {
+      href: "/billables",
+      label: "Billables",
       icon: <GraduationCap className="mr-2 h-4 w-4" />,
     },
   ];
@@ -54,7 +57,9 @@ export default function Header({}) {
     <header className="bg-white shadow">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">School Dashboard</h1>
+          <h1 className="text-2xl font-bold text-gray-900">
+            <div className="" id="headerTitle"></div>
+          </h1>
           <div className="flex items-center space-x-4">
             <Select onValueChange={setCurrentTerm} defaultValue={currentTerm}>
               <SelectTrigger className="w-[180px]">

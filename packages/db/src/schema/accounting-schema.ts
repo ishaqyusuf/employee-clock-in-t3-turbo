@@ -1,82 +1,94 @@
-import { relations } from "drizzle-orm";
 import { boolean, decimal, pgTable, varchar } from "drizzle-orm/pg-core";
 
-import { EmployeeService } from "./employee-schema";
 import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
-import { academicTerm, school } from "./school-schema";
-import { StudentSessionSheet } from "./student-schema";
+import { AcademicTerm, School } from "./school-schema";
+import { BillableService, StaffTermSheet } from "./staff-schema";
+// import { StaffTermSheet } from "./staff-schema";
+import { StudentTermSheet } from "./student-schema";
+import { User } from "./user-schema";
 
-export const schoolWallet = pgTable("school_wallet", {
+export const SchoolWallet = pgTable("school_wallet", {
   id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
+  schoolId: _uuidRel("school_id", School.id).notNull(),
   balance: decimal("balance").default("0.00"),
   ...timeStamps,
 });
 
-type PaymentTypes = "credit" | "debit";
-type TransactionType =
-  | "school fee"
-  | "salary"
-  | "book"
-  | "uniform"
-  | "entry form"
-  | "misc";
-export const transaction = pgTable("transaction", {
+type PaymentTypes = "deposit" | "withdraw";
+export const transactionTypes = [
+  "school fee",
+  "salary",
+  "inventory",
+  "uniform",
+  "entry form",
+  "service payment",
+  "misc",
+] as const;
+export type TransactionType = (typeof transactionTypes)[number];
+export const Transaction = pgTable("transaction", {
   id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
+  schoolId: _uuidRel("school_id", School.id),
   paymentType: varchar("payment_type").$type<PaymentTypes>(),
   transactionType: varchar("transaction_type").$type<TransactionType>(),
   headline: varchar("headline"),
   description: varchar("description"),
   amount: decimal("amount").notNull(),
   coupon: boolean("coupon").default(false),
-  termId: _uuidRel("academicTermId", academicTerm.id),
+  termId: _uuidRel("academic_term_id", AcademicTerm.id),
+  studentTermId: _uuidRel("student_term_id", StudentTermSheet.id, false),
+  staffTermId: _uuidRel("staff_term_id", StaffTermSheet.id, false),
   ...timeStamps,
 });
-export const studentTransaction = pgTable("student_transaction", {
+// export const StudentTransaction = pgTable("student_transaction", {
+//   id: __uuidPri,
+//   schoolId: _uuidRel("school_id", School.id).notNull(),
+//   studentSessionFormId: _uuidRel(
+//     "studentSessionFormId",
+//     StudentSessionSheet.id,
+//   ),
+//   transactionId: _uuidRel("transactionId", Transaction.id),
+//   ...timeStamps,
+// });
+// export const StaffTransaction = pgTable("staff_transaction", {
+//   id: __uuidPri,
+//   schoolId: _uuidRel("school_id", School.id).notNull(),
+//   transactionId: _uuidRel("transactionId", Transaction.id),
+//   ...timeStamps,
+// });
+// export const BookTransaction = pgTable("book_transaction", {
+//   id: __uuidPri,
+//   schoolId: _uuidRel("school_id", School.id).notNull(),
+//   studentSessionFormId: _uuidRel(
+//     "studentSessionFormId",
+//     StudentSessionSheet.id,
+//   ),
+//   transactionId: _uuidRel("transactionId", Transaction.id),
+//   ...timeStamps,
+// });
+export const Inventory = pgTable("inventory", {
   id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
-  studentSessionFormId: _uuidRel(
-    "studentSessionFormId",
-    StudentSessionSheet.id,
-  ),
-  transactionId: _uuidRel("transactionId", transaction.id),
-  ...timeStamps,
-});
-export const EmployeeTransaction = pgTable("employee_transaction", {
-  id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
-  transactionId: _uuidRel("transactionId", transaction.id),
-  ...timeStamps,
-});
-export const EmployeeTransactionRelation = relations(
-  EmployeeTransaction,
-  (r) => ({
-    employeeServices: r.many(EmployeeService),
-  }),
-);
-export const bookTransaction = pgTable("book_transaction", {
-  id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
-  studentSessionFormId: _uuidRel(
-    "studentSessionFormId",
-    StudentSessionSheet.id,
-  ),
-  transactionId: _uuidRel("transactionId", transaction.id),
-  ...timeStamps,
-});
-export const book = pgTable("book", {
-  id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
+  schoolId: _uuidRel("school_id", School.id).notNull(),
   title: varchar("title"),
+  type: varchar("type"),
   amount: decimal("amount").notNull(),
   ...timeStamps,
 });
-export const purchasedBook = pgTable("transaction_book", {
+export const InventorySales = pgTable("inventory_sales", {
   id: __uuidPri,
-  schoolId: _uuidRel("school_id", school.id),
+  schoolId: _uuidRel("school_id", School.id).notNull(),
   title: varchar("title"),
-  bookId: _uuidRel("bookId", book.id),
-  bookTransactionId: _uuidRel("bookTransactionId", bookTransaction.id),
+  bookId: _uuidRel("book_id", Inventory.id),
+  transactionId: _uuidRel("transaction_id", Transaction.id),
+  ...timeStamps,
+});
+export const StaffService = pgTable("staff_service", {
+  id: __uuidPri,
+  schoolId: _uuidRel("school_id", School.id).notNull(),
+  note: varchar("note"),
+  amount: decimal("amount").default("0"),
+  staffId: _uuidRel("staff_id", User.id).notNull(),
+  serviceId: _uuidRel("service_id", BillableService.id),
+  termId: _uuidRel("term_id", AcademicTerm.id),
+  transactionId: _uuidRel("staff_tx_id", Transaction.id, false),
   ...timeStamps,
 });

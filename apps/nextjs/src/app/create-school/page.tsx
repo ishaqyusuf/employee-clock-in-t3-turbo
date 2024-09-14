@@ -30,7 +30,7 @@ export default function CreateSchoolPage() {
           Create School
         </Button>
 
-        <div className="px-4">
+        {/* <div className="px-4">
           {d.data?.map((d) => (
             <div>
               {d.results.map((r) => (
@@ -41,7 +41,7 @@ export default function CreateSchoolPage() {
               ))}
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </>
   );

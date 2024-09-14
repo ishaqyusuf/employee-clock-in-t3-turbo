@@ -2,8 +2,8 @@
 // import { relations } from "drizzle-orm"; // Assuming you're using drizzle-orm
 
 // import { transaction } from "./accounting-schema";
-// import { workerTermSheet } from "./employee-schema";
-// import { user } from "./user-schema";
+// import { workerTermSheet } from "./staff-schema";
+// import { User } from "./user-schema";
 
 // export function _relation<T>(table: T) {
 //   type TableName = T["_"]["name"];

@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { _uuidRel, timeStamps } from "./schema-helper";
-import { school } from "./school-schema";
+import { School } from "./school-schema";
 
 // export const Post = pgTable("post", {
 //   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -32,14 +32,17 @@ import { school } from "./school-schema";
 //   updatedAt: true,
 // });
 type UserRole = "admin" | "accountant" | "teacher";
-export const user = pgTable(
+export const User = pgTable(
   "user",
   {
     id: uuid("id").notNull().primaryKey().defaultRandom(),
+    title: varchar("title", { length: 255 }),
     name: varchar("name", { length: 255 }),
     email: varchar("email", { length: 255 }).notNull(),
+    username: varchar("username", { length: 255 }),
+    phoneNo: varchar("phone_no", { length: 255 }),
     role: varchar("role", { length: 255 }).$type<UserRole>(),
-    schoolId: _uuidRel("school_id", school.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
     emailVerified: timestamp("emailVerified", {
       mode: "date",
       withTimezone: true,
@@ -52,12 +55,12 @@ export const user = pgTable(
   }),
 );
 
-export const account = pgTable(
+export const Account = pgTable(
   "account",
   {
     userId: uuid("userId")
       .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+      .references(() => User.id, { onDelete: "cascade" }),
     type: varchar("type", { length: 255 })
       .$type<"email" | "oauth" | "oidc" | "webauthn">()
       .notNull(),
@@ -78,11 +81,11 @@ export const account = pgTable(
   }),
 );
 
-export const session = pgTable("session", {
+export const Session = pgTable("session", {
   sessionToken: varchar("sessionToken", { length: 255 }).notNull().primaryKey(),
   userId: uuid("userId")
     .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
+    .references(() => User.id, { onDelete: "cascade" }),
   expires: timestamp("expires", {
     mode: "date",
     withTimezone: true,

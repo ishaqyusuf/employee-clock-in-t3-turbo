@@ -1,3 +1,6 @@
+import { desc } from "@acme/db";
+import { db } from "@acme/db/client";
+import { AcademicTerm } from "@acme/db/schema";
 import { Badge } from "@acme/ui/badge";
 
 import { getStudentList } from "~/data-access/students.dta";
@@ -15,6 +18,7 @@ export default async function ListstudentsPage({ params }) {
   //   const studentByClass = await db.query.AcademicTerm
   return (
     <div className="container mx-auto p-4">
+      {/* {JSON.stringify(terms)} */}
       <h1 className="mb-4 text-2xl font-bold">Student List</h1>
 
       <Client data={studentList} />

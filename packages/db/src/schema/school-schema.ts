@@ -11,7 +11,7 @@ import { createInsertSchema } from "drizzle-zod";
 
 import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
 
-export const school = pgTable(
+export const School = pgTable(
   "school",
   {
     id: __uuidPri,
@@ -27,28 +27,28 @@ export const school = pgTable(
     unq: unique().on(t.name, t.subDomain),
   }),
 );
-export const createSchoolSchema = createInsertSchema(school, {});
-export const academicSession = pgTable(
+export const CreateSchoolSchema = createInsertSchema(School, {});
+export const AcademicSession = pgTable(
   "academic_session",
   {
     id: __uuidPri,
     name: varchar("name", { length: 256 }).notNull(),
     startDate: timestamp("start_date"),
     endDate: timestamp("end_date"),
-    schoolId: _uuidRel("school_id", school.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
     ...timeStamps,
   },
   (t) => ({
     unq: unique().on(t.name, t.schoolId),
   }),
 );
-export const academicTerm = pgTable(
+export const AcademicTerm = pgTable(
   "academic_term",
   {
     id: __uuidPri,
     name: varchar("name", { length: 256 }).notNull(),
-    schoolId: _uuidRel("school_id", school.id),
-    academicSessionId: _uuidRel("academicSessionId", academicSession.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
+    academicSessionId: _uuidRel("academic_session_id", AcademicSession.id),
     startDate: timestamp("start_date"),
     endDate: timestamp("end_date"),
     ...timeStamps,
@@ -58,12 +58,12 @@ export const academicTerm = pgTable(
   }),
 );
 
-export const academicClass = pgTable(
+export const AcademicClass = pgTable(
   "academic_class",
   {
     id: __uuidPri,
     name: varchar("name", { length: 256 }).notNull(),
-    schoolId: _uuidRel("school_id", school.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
     classLevel: integer("classLevel").notNull().default(1),
     ...timeStamps,
   },
@@ -71,40 +71,40 @@ export const academicClass = pgTable(
     unq: unique().on(t.name, t.schoolId),
   }),
 );
-export const subjects = pgTable(
-  "subjects",
+export const Subjects = pgTable(
+  "Subjects",
   {
     id: __uuidPri,
     name: varchar("name", { length: 256 }).notNull(),
-    schoolId: _uuidRel("school_id", school.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
     ...timeStamps,
   },
   (t) => ({
     unq: unique().on(t.name, t.schoolId),
   }),
 );
-export const sessionClass = pgTable(
+export const SessionClass = pgTable(
   "session_class",
   {
     id: __uuidPri,
-    schoolId: _uuidRel("school_id", school.id),
-    academicSessionId: _uuidRel("academicSessionId", academicSession.id),
-    academicClassId: _uuidRel("academicClassId", academicClass.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
+    academicSessionId: _uuidRel("academic_session_id", AcademicSession.id),
+    academicClassId: _uuidRel("academic_class_id", AcademicClass.id),
     ...timeStamps,
   },
   (t) => ({
     unq: unique().on(t.academicClassId, t.schoolId, t.academicSessionId),
   }),
 );
-export const classSubject = pgTable(
+export const ClassSubject = pgTable(
   "class_subject",
   {
     id: __uuidPri,
-    schoolId: _uuidRel("school_id", school.id),
-    academicSessionId: _uuidRel("academicSessionId", academicSession.id),
-    academicClassId: _uuidRel("academicClassId", academicClass.id),
-    sessionClassId: _uuidRel("session_class_id", sessionClass.id),
-    subjectId: _uuidRel("subject_id", subjects.id),
+    schoolId: _uuidRel("school_id", School.id).notNull(),
+    academicSessionId: _uuidRel("academic_session_id", AcademicSession.id),
+    academicClassId: _uuidRel("academic_class_id", AcademicClass.id),
+    sessionClassId: _uuidRel("session_class_id", SessionClass.id),
+    subjectId: _uuidRel("subject_id", Subjects.id),
     ...timeStamps,
   },
   (t) => ({

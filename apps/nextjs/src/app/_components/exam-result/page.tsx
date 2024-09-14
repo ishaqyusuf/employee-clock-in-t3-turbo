@@ -183,7 +183,7 @@ export default function ExamResult() {
                         <th align={"center"}>الرقم</th>
                       </thead>
                       <tbody>
-                        {r.subjects.map((s, si) => (
+                        {r.Subjects.map((s, si) => (
                           <tr className="" key={si}>
                             <td align="center">{tran.enToAr(s.score)}</td>
                             <td align="center">{tran.enToAr(s.score)}</td>
@@ -224,7 +224,7 @@ export default function ExamResult() {
                                 {configs.quran}
                               </td>
                               <td rowSpan={2} align="center">
-                                {tran.enToAr(r.subjects.length + 1)}
+                                {tran.enToAr(r.Subjects.length + 1)}
                               </td>
                             </tr>
                             <tr>
@@ -321,7 +321,7 @@ export default function ExamResult() {
                 <tr>
                   <td>Position</td>
                   <td>Total</td>
-                  {data.subjects.reverse().map((s, i) => (
+                  {data.Subjects.reverse().map((s, i) => (
                     <th key={i}>{s}</th>
                   ))}
                   <td>Names</td>
@@ -333,7 +333,7 @@ export default function ExamResult() {
                   <tr key={ri}>
                     <td>{r.position}</td>
                     <td>{r.totalObtained}</td>
-                    {r.subjects.map((s, si) => (
+                    {r.Subjects.map((s, si) => (
                       <td key={`res-${ri}-subject-${si}`}>{s.score}</td>
                     ))}
                     <td>{r.studentName}</td>

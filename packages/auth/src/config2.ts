@@ -230,7 +230,7 @@ export const authOptions: NextAuthConfig = {
 //             id: "1",
 //           },
 //           workspace: {
-//             sessionId: term?.academicSessionId,
+//             sessionId: term?.AcademicSessionId,
 //             termId: term?.id,
 //             schoolId: term?.schoolId,
 //           },

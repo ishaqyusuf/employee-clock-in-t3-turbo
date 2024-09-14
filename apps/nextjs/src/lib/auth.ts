@@ -1,16 +1,20 @@
+import { desc } from "@acme/db";
 import { db } from "@acme/db/client";
+import { AcademicTerm } from "@acme/db/schema";
 
 export async function getAuthSession() {
-  // const term = await db.query.AcademicTerm.findFirst({
-  //   orderBy: (terms, { desc }) => [desc(terms.createdAt)],
-  //   with: {},
-  // });
-  return {
+  const term = await db.query.AcademicTerm.findFirst({
+    orderBy: desc(AcademicTerm.startDate),
+  });
+  if (!term) throw Error();
+  const res = {
     workspace: {
-      termId: `c4c803f6-8288-4f1e-b99f-36524a453337`,
+      termId: term.id,
+      sessionId: term.academicSessionId,
       domain: "daarul-hadith",
-      schoolId: "3b74429f-149f-4ea3-a370-ff28eb0eb265",
-      title: `1445/1446 1st Term`,
+      schoolId: term.schoolId,
+      title: `1445/1446 2nd Term`,
     },
   };
+  return res as any as NonNullable<typeof res>;
 }

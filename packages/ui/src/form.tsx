@@ -1,8 +1,20 @@
 import type * as LabelPrimitive from "@radix-ui/react-label";
-import type { ControllerProps, FieldPath, FieldValues } from "react-hook-form";
+import type {
+  ControllerProps,
+  FieldPath,
+  FieldValues,
+  UseFormProps,
+} from "react-hook-form";
+import type { ZodType, ZodTypeDef } from "zod";
 import * as React from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Slot } from "@radix-ui/react-slot";
-import { Controller, FormProvider, useFormContext } from "react-hook-form";
+import {
+  useForm as __useForm,
+  Controller,
+  FormProvider,
+  useFormContext,
+} from "react-hook-form";
 
 import { cn } from ".";
 import { Label } from "./label";
@@ -159,8 +171,25 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const useForm = <
+  TOut extends FieldValues,
+  TDef extends ZodTypeDef,
+  TIn extends FieldValues,
+>(
+  props: Omit<UseFormProps<TIn>, "resolver"> & {
+    schema: ZodType<TOut, TDef, TIn>;
+  },
+) => {
+  const form = __useForm<TIn, unknown, TOut>({
+    ...props,
+    resolver: zodResolver(props.schema, undefined),
+  });
+
+  return form;
+};
 export {
   useFormField,
+  useForm,
   Form,
   FormItem,
   FormLabel,

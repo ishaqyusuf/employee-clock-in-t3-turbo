@@ -6,7 +6,7 @@ export interface IClassResult {
   className: string;
   totalObtainable: number;
   totalstudents: number;
-  subjects: string[];
+  Subjects: string[];
   pageSize: "full" | "half2" | "half";
   results: {
     rawName: string;
@@ -14,7 +14,7 @@ export interface IClassResult {
     firstName: string;
     otherName: string;
     surname: string;
-    subjects: { name: string; score: number }[];
+    Subjects: { name: string; score: number }[];
     totalObtained?: number;
     position?: number;
     quran?: {
@@ -37,7 +37,7 @@ export default function useDataTransform() {
           pageSize: d.pageSize,
         };
         _resp.className = d.class;
-        let subjects = [];
+        let Subjects = [];
         d.rawData.split("\n").map((line, index) => {
           const spl = line
             .replaceAll("،", ",")
@@ -45,9 +45,9 @@ export default function useDataTransform() {
             .split(",")
             .map((c) => c.trim());
           if (index == 0) {
-            subjects = spl.slice(1);
-            _resp.subjects = subjects;
-            _resp.totalObtainable = 100 * subjects.length;
+            Subjects = spl.slice(1);
+            _resp.Subjects = Subjects;
+            _resp.totalObtainable = 100 * Subjects.length;
           } else {
             _resp.totalstudents += 1;
             let totalScore = 0;
@@ -67,31 +67,29 @@ export default function useDataTransform() {
               firstName,
               surname,
               otherName,
-              subjects: subjects
-                .map((s, i) => {
-                  const scoreCol = spl[i + 1];
-                  if (scoreCol?.includes(";")) {
-                    const [s1, s2, s3] = scoreCol.split(";");
-                    const total = [s1, s2, s3]
-                      .map((s) => Number(s))
-                      .reduce((a, b) => a + b, 0);
-                    quran = [
-                      { title: configs.total, mark: total },
-                      { title: configs.revision, mark: s3 },
-                      { title: configs.recitation, mark: s2 },
-                      { title: configs.hifz, mark: s1 },
-                    ];
-                    totalScore += Number(total);
-                    return null;
-                  }
-                  const score = Number(arabicToEnglish(scoreCol)) || 0;
-                  totalScore += score;
-                  return {
-                    name: s,
-                    score,
-                  };
-                })
-                .filter(Boolean),
+              Subjects: Subjects.map((s, i) => {
+                const scoreCol = spl[i + 1];
+                if (scoreCol?.includes(";")) {
+                  const [s1, s2, s3] = scoreCol.split(";");
+                  const total = [s1, s2, s3]
+                    .map((s) => Number(s))
+                    .reduce((a, b) => a + b, 0);
+                  quran = [
+                    { title: configs.total, mark: total },
+                    { title: configs.revision, mark: s3 },
+                    { title: configs.recitation, mark: s2 },
+                    { title: configs.hifz, mark: s1 },
+                  ];
+                  totalScore += Number(total);
+                  return null;
+                }
+                const score = Number(arabicToEnglish(scoreCol)) || 0;
+                totalScore += score;
+                return {
+                  name: s,
+                  score,
+                };
+              }).filter(Boolean),
             });
             const index = _resp.results.length - 1;
             _resp.results[index].totalObtained = totalScore;
@@ -130,7 +128,7 @@ export default function useDataTransform() {
             .filter(
               (r) =>
                 r.totalObtained > 0 &&
-                r.subjects.filter((s) => s.score > 0).length > 1,
+                r.Subjects.filter((s) => s.score > 0).length > 1,
             )
             // .filter((r) => da.className == "الأول التمهيدي ا")
             // .filter((r) =>

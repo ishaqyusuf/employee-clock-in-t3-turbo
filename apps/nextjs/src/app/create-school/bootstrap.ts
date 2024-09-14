@@ -16,7 +16,6 @@ import {
 } from "@acme/db/schema";
 
 import type useDataTransform from "../_components/exam-result/use-data-transform";
-import { first } from "~/lib/lodash";
 import { configs } from "../_components/exam-result/data";
 
 type Data = ReturnType<typeof useDataTransform>["data"];
@@ -24,9 +23,22 @@ export async function bootstrapSchool(data: Data) {
   const school = await createSchool();
   // BillableService
   //   return school;
-  const session = await createSession(`1445/1446`, school);
+  const startDate = new Date("2024-04-20");
+  const endDate = new Date("2024-07-28");
+  const session = await createSession(`1445/1446`, school, startDate);
   //   return session;
-  const firstTerm = await createSessionTerm(`First Term`, session);
+
+  const firstTerm = await createSessionTerm(
+    `First Term`,
+    session,
+    startDate,
+    endDate,
+  );
+  const secondTerm = await createSessionTerm(
+    `Second Term`,
+    session,
+    new Date("2024-08-10"),
+  );
 
   // create academic class
   const classes = await Promise.all(
@@ -38,8 +50,8 @@ export async function bootstrapSchool(data: Data) {
       );
       //create sesson class
       const sessionClass = await createSessionClass(academicClass, session);
-      // create subjects
-      const subjects = await createSubjects(classData.subjects, {
+      // create Subjects
+      const subjects = await createSubjects(classData.Subjects, {
         schoolId: school.id,
         academicClassId: academicClass.id,
         academicSessionId: session.id,
@@ -57,6 +69,7 @@ export async function bootstrapSchool(data: Data) {
               surname: res.surname,
               sessionClassId: sessionClass.id,
               academicTermId: firstTerm.id,
+              sessionId: session.id,
             });
           }),
       );
@@ -92,10 +105,11 @@ async function createStudentSessionData({
   schoolId,
   sessionClassId,
   academicTermId,
+  sessionId,
 }) {
   const form = checkStudent({ firstName, otherName, surname });
   //   return;
-  const student = first(
+  const student = __firstOrThrow(
     await db
       .insert(Student)
       .values({
@@ -115,12 +129,13 @@ async function createStudentSessionData({
       })
       .returning(),
   );
-  const sessionSheet = first(
+  const sessionSheet = __firstOrThrow(
     await db
       .insert(StudentSessionSheet)
       .values({
         schoolId,
-        // sessionClassId,
+        // SessionClassId,
+        sessionId,
         studentId: student.id,
       })
       .returning()
@@ -130,18 +145,19 @@ async function createStudentSessionData({
         },
         target: [
           StudentSessionSheet.studentId,
-          // StudentSessionSheet.sessionClassId,
+          // StudentSessionSheet.SessionClassId,
           StudentSessionSheet.schoolId,
         ],
       }),
   );
-  const termSheet = first(
+  const termSheet = __firstOrThrow(
     await db
       .insert(StudentTermSheet)
       .values({
         sessionSheetId: sessionSheet.id,
         sessionClassId,
         studentId: student.id,
+
         termId: academicTermId,
       })
       .returning()
@@ -164,7 +180,7 @@ async function createSubjects(
   subjects,
   { schoolId, academicClassId, academicSessionId, sessionClassId },
 ) {
-  const _subjects = await db
+  const _Subjects = await db
     .insert(Subjects)
     .values(
       subjects.map((name) => ({
@@ -180,12 +196,12 @@ async function createSubjects(
     })
     .returning();
   const ls = await db.query.ClassSubject.findMany();
-  const classSubjects = ls.length
+  const ClassSubjects = ls.length
     ? ls
     : await db
         .insert(ClassSubject)
         .values(
-          _subjects.map((s) => ({
+          _Subjects.map((s) => ({
             schoolId,
             subjectId: s.id,
             sessionClassId,
@@ -194,25 +210,25 @@ async function createSubjects(
           })),
         )
         // .onConflictDoUpdate({
-        //   target: [ClassSubject.academicSessionId, ClassSubject.subjectId],
+        //   target: [ClassSubject.AcademicSessionId, ClassSubject.subjectId],
         //   set: {
         //     updatedAt: new Date(),
         //   },
         // })
         .returning();
   return {
-    classSubjects,
-    _subjects,
+    ClassSubjects,
+    _Subjects,
   };
 }
 async function createSessionClass(_class, acadSession) {
-  return first(
+  return __firstOrThrow(
     await db
       .insert(SessionClass)
       .values({
         academicClassId: _class.id,
-        academicSessionId: acadSession.id,
         schoolId: _class.schoolId,
+        academicSessionId: acadSession.id,
       })
       .onConflictDoUpdate({
         target: [
@@ -228,30 +244,37 @@ async function createSessionClass(_class, acadSession) {
   );
 }
 async function createAcademicClass(name, school) {
-  return first(
-    await db
-      .insert(AcademicClass)
-      .values({
-        name,
-        schoolId: school.id,
-      })
-      .onConflictDoUpdate({
-        target: [AcademicClass.schoolId, AcademicClass.name],
-        set: {
-          updatedAt: new Date(),
-        },
-      })
-      .returning(),
-  );
+  const [res] = await db
+    .insert(AcademicClass)
+    .values({
+      name,
+      schoolId: school.id,
+    })
+    .onConflictDoUpdate({
+      target: [AcademicClass.schoolId, AcademicClass.name],
+      set: {
+        updatedAt: new Date(),
+      },
+    })
+    .returning();
+  if (!res) throw new Error("Invalid");
+  return res;
 }
-async function createSessionTerm(name, session) {
-  return first(
+function __firstOrThrow<T>(data: T[], error = "Not found") {
+  const [f] = data;
+  if (!f) throw new Error(error);
+  return f;
+}
+async function createSessionTerm(name, session, startDate, endDate?) {
+  return __firstOrThrow(
     await db
       .insert(AcademicTerm)
       .values({
         name,
         academicSessionId: session.id,
         schoolId: session.schoolId,
+        startDate,
+        endDate,
       })
       .onConflictDoUpdate({
         target: [
@@ -266,13 +289,15 @@ async function createSessionTerm(name, session) {
       .returning(),
   );
 }
-async function createSession(name, school) {
-  const session = first(
+async function createSession(name, school, startDate, endDate?) {
+  return __firstOrThrow(
     await db
       .insert(AcademicSession)
       .values({
         name,
         schoolId: school.id,
+        startDate,
+        endDate,
       })
       .onConflictDoUpdate({
         target: [AcademicSession.schoolId, AcademicSession.name],
@@ -282,40 +307,46 @@ async function createSession(name, school) {
       })
       .returning(),
   );
-  return session;
 }
 async function createSchool() {
-  const [school] = await db
-    .insert(School)
-    .values({
-      name: configs.schoolName,
-      subDomain: `daarul-hadith`,
-      meta: {},
-    })
-    .onConflictDoUpdate({
-      target: [School.name, School.subDomain],
-      set: {
-        updatedAt: new Date(),
-      },
-    })
-    .returning();
-  if (!school) throw new Error("Unable to create school");
-  const [user] = await db
-    .insert(User)
-    .values({
-      email: `ishaqyusuf024@gmail.com`,
-      name: `Ishaq Yusuf`,
-      role: "admin",
-      schoolId: school.id,
-    })
-    .onConflictDoUpdate({
-      target: [User.email, User.schoolId],
-      set: {
-        updatedAt: new Date(),
-      },
-    })
-    .returning();
+  const school = __firstOrThrow(
+    await db
+      .insert(School)
+      .values({
+        name: configs.schoolName,
+        subDomain: `daarul-hadith`,
+        meta: {},
+      })
+      .onConflictDoUpdate({
+        target: [School.name, School.subDomain],
+        set: {
+          updatedAt: new Date(),
+        },
+      })
+      .returning(),
+    "Unable to create school",
+  );
+  const user = __firstOrThrow(
+    await db
+      .insert(User)
+      .values({
+        email: `ishaqyusuf024@gmail.com`,
+        name: `Ishaq Yusuf`,
+        role: "admin",
+        schoolId: school.id,
+      })
+      .onConflictDoUpdate({
+        target: [User.email, User.schoolId],
+        set: {
+          updatedAt: new Date(),
+        },
+      })
+      .returning(),
+  );
   return school;
 }
 
-export async function createSecondTerm() {}
+export async function createSecondTerm() {
+  //
+  const startDate = new Date("10/08/2024");
+}
