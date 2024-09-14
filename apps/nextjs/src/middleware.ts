@@ -27,7 +27,8 @@ export default async function middleware(req: NextRequest) {
     searchParams.length > 0 ? `?${searchParams}` : ""
   }`;
   if (
-    hostname === env.APP_ROOT_DOMAIN
+    hostname === env.APP_ROOT_DOMAIN &&
+    env.NODE_ENV == "production"
     // ||
     // hostname === env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
@@ -39,5 +40,6 @@ export default async function middleware(req: NextRequest) {
   // // console.log(">>>>>>>>>>>>>>>");
   // // rewrite everything else to `/[domain]/[slug] dynamic route
   // console.log(["+++TENANT+++", hostname, path]);
+  console.log({ hostname, path });
   return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
 }

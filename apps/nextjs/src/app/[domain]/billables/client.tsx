@@ -14,7 +14,7 @@ export default function PageClient({ loader }) {
 
   return (
     <div className="p-4">
-      {/* <Title>Billables</Title> */}
+      <Title>Billables</Title>
       <div className="fixed bottom-0 right-0 m-4 mb-12">
         <Button asChild size={"icon"}>
           <Link href="/billable/create">+</Link>

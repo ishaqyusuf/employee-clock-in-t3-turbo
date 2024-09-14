@@ -57,9 +57,12 @@ export default function Header() {
     <header className="bg-white shadow">
       <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">
-            <div className="" id="headerTitle"></div>
-          </h1>
+          <div className="">
+            <h1
+              id="headerTitle"
+              className="text-2xl font-bold text-gray-900"
+            ></h1>
+          </div>
           <div className="flex items-center space-x-4">
             <Select onValueChange={setCurrentTerm} defaultValue={currentTerm}>
               <SelectTrigger className="w-[180px]">
