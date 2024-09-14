@@ -20,7 +20,7 @@ export default async function middleware(req: NextRequest) {
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const __hostName = `.${env.APP_ROOT_DOMAIN}`;
   const hostname = req.headers.get("host"); //!.replace(__hostName, __hostName);
-
+  const isProd = env.NODE_ENV == "production";
   const searchParams = req.nextUrl.searchParams.toString();
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = `${url.pathname}${
@@ -28,7 +28,7 @@ export default async function middleware(req: NextRequest) {
   }`;
   if (
     hostname === env.APP_ROOT_DOMAIN &&
-    env.NODE_ENV == "production"
+    isProd
     // ||
     // hostname === env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
@@ -41,5 +41,7 @@ export default async function middleware(req: NextRequest) {
   // // rewrite everything else to `/[domain]/[slug] dynamic route
   // console.log(["+++TENANT+++", hostname, path]);
   console.log({ hostname, path });
-  return NextResponse.rewrite(new URL(`/${hostname}${path}`, req.url));
+  return NextResponse.rewrite(
+    new URL(`/${isProd ? "daarul-hadith" : hostname}${path}`, req.url),
+  );
 }
