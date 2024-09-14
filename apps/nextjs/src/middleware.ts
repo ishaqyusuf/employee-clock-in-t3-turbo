@@ -40,8 +40,7 @@ export default async function middleware(req: NextRequest) {
   // // console.log(">>>>>>>>>>>>>>>");
   // // rewrite everything else to `/[domain]/[slug] dynamic route
   // console.log(["+++TENANT+++", hostname, path]);
-  console.log({ hostname, path });
-  return NextResponse.rewrite(
-    new URL(`/${isProd ? "daarul-hadith" : hostname}${path}`, req.url),
-  );
+  const _url = `/${isProd ? "daarul-hadith" : hostname}${path}`;
+  console.log({ hostname, path, _url });
+  return NextResponse.rewrite(new URL(url, req.url));
 }
