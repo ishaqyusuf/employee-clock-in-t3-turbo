@@ -40,7 +40,7 @@ interface Props<T extends FieldValues> {
 export default function FormSelect<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-  TOptionType = any,
+  TOptionType extends FieldValues = any,
 >({
   label,
   placeholder,
