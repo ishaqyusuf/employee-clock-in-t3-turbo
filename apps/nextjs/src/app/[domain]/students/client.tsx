@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { Badge } from "@acme/ui/badge";
 import { Button } from "@acme/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@acme/ui/card";
@@ -46,6 +48,11 @@ export default function Client({ data }: Props) {
 
   return (
     <>
+      <div className="fixed bottom-0 right-0 m-4 mb-12">
+        <Button asChild size={"icon"}>
+          <Link href="/student/create">+</Link>
+        </Button>
+      </div>
       {/* Table for larger screens */}
       <div className="hidden md:block">
         <Table>

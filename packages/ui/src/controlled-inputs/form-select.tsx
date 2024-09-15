@@ -21,14 +21,14 @@ import {
   SelectValue,
 } from "../select";
 
-interface Props<T> {
+interface Props<T extends FieldValues> {
   label?;
   placeholder?;
   options?: T[];
   SelectItem?({ option }: { option: T });
   Item?({ option }: { option: T });
-  valueKey?: keyof T;
-  titleKey?: keyof T;
+  valueKey?: FieldPath<T>;
+  titleKey?: FieldPath<T>;
   onSelect?(selection: T);
   loader?;
   className?: string;

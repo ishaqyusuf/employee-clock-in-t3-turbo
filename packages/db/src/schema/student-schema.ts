@@ -1,5 +1,6 @@
 import { pgTable, unique, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
 import {
@@ -30,11 +31,17 @@ export const Student = pgTable(
     unq: unique().on(t.schoolId, t.firstName, t.otherName, t.surname),
   }),
 );
-export const CreateStudentSchema = createInsertSchema(Student).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
+
+export const CreateStudentSchema = createInsertSchema(Student)
+  .omit({
+    id: true,
+    createdAt: true,
+    updatedAt: true,
+    deletedAt: true,
+  })
+  .extend({
+    sessionClassId: z.string(),
+  });
 export const StudentSessionSheet = pgTable(
   "student_session_form",
   {
