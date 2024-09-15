@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../select";
+import { dotValue } from "../utils/dot-value";
 
 interface Props<T extends FieldValues> {
   label?;
@@ -76,15 +77,12 @@ export default function FormSelect<
     if (!option) return option;
     if (Number.isInteger(option)) option = String(option);
 
-    return typeof option == "object" ? option[valueKey] : option;
+    const val = typeof option == "object" ? dotValue(option, valueKey) : option;
+    return val;
   }
   function itemText(option) {
     if (!option) return option;
-    return typeof option == "string"
-      ? option
-      : titleKey == "label"
-        ? option[titleKey] || option["text"]
-        : option[titleKey];
+    return typeof option == "string" ? option : dotValue(option, titleKey);
   }
   return (
     <FormField

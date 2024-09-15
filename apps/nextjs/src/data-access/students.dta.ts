@@ -118,3 +118,26 @@ export async function getStudentList() {
   // });
   // return list;
 }
+
+export async function getStudentNames() {
+  const names = await db.query.Student.findMany({
+    columns: {
+      firstName: true,
+      otherName: true,
+      surname: true,
+    },
+  });
+  return {
+    names: Array.from(
+      new Set(
+        names
+          .map(({ firstName, surname }) => [firstName, surname])
+          .flat()
+          .filter(Boolean),
+      ),
+    ),
+    otherNames: Array.from(
+      new Set(names.map(({ otherName }) => otherName).filter(Boolean)),
+    ),
+  };
+}

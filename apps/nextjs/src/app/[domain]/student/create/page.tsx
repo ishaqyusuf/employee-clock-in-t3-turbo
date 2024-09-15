@@ -1,30 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
-
 import { CreateStudentSchema } from "@acme/db/schema";
-import { FieldPath, useFieldArray } from "@acme/ui";
 import Button from "@acme/ui/common/button";
-import FormCheckbox from "@acme/ui/controlled-inputs/form-checkbox";
 import FormInput from "@acme/ui/controlled-inputs/form-input";
 import FormSelect from "@acme/ui/controlled-inputs/form-select";
 import { Form, useForm } from "@acme/ui/form";
-import { SelectItem } from "@acme/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHeader,
-  TableRow,
-} from "@acme/ui/table";
 import { toast } from "@acme/ui/toast";
 
-import {
-  BillableForm,
-  createBillables,
-  getBillableForm,
-} from "~/data-access/billables.dta";
-import { saveService } from "~/data-access/service.dta";
 import { useClassrooms } from "~/hooks/use-classrooms";
 
 export default function CreateBillable() {
@@ -32,6 +14,7 @@ export default function CreateBillable() {
     schema: CreateStudentSchema,
     defaultValues: {},
   });
+  const sessionClassId = form.watch("sessionClassId");
   const classRooms = useClassrooms({
     loadOnInit: true,
   });
@@ -68,7 +51,7 @@ export default function CreateBillable() {
           />
           <FormSelect
             options={classRooms.classRooms}
-            type="combo"
+            // type="combo"
             titleKey="classRoom.name"
             valueKey="id"
             control={form.control}
