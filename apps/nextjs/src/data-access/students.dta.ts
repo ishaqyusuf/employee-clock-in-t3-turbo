@@ -1,5 +1,6 @@
 "use server";
 
+import type { CreateStudentSchema } from "@acme/db/schema";
 import { and, desc, eq, sql } from "@acme/db";
 import { db } from "@acme/db/client";
 import {
@@ -10,6 +11,7 @@ import {
 } from "@acme/db/schema";
 
 import { getAuthSession } from "~/lib/auth";
+import { formPayment, schoolFeePayment } from "./transactions.dta";
 
 export type StudentsList = NonNullable<
   Awaited<ReturnType<typeof getStudentList>>
@@ -140,4 +142,56 @@ export async function getStudentNames() {
       new Set(names.map(({ otherName }) => otherName).filter(Boolean)),
     ),
   };
+}
+
+// type _type = CreateStudentSchema._type;
+export async function createStudent(data: typeof CreateStudentSchema._type) {
+  const auth = await getAuthSession();
+
+  const { extras, ...rest } = data;
+  rest.schoolId = auth.workspace.schoolId;
+  const [student] = await db
+    .insert(Student)
+
+    .values({
+      ...rest,
+    })
+    .onConflictDoNothing({
+      target: [
+        Student.firstName,
+        Student.otherName,
+        Student.surname,
+        Student.schoolId,
+      ],
+    })
+    .returning();
+  if (!student) throw new Error("Student with name already exists");
+  const [sessionSheet] = await db
+    .insert(StudentSessionSheet)
+    .values({
+      schoolId: rest.schoolId,
+      studentId: student.id,
+      sessionId: auth.workspace.sessionId,
+    })
+    .returning();
+  if (!sessionSheet) throw new Error("Unable to create session sheet");
+  const [termSheet] = await db
+    .insert(StudentTermSheet)
+    .values({
+      termId: auth.workspace.termId,
+      sessionClassId: extras.sessionClassId,
+      sessionSheetId: sessionSheet.id,
+      studentId: student.id,
+    })
+    .returning();
+
+  if (extras.payments.form)
+    await formPayment({
+      studentTermId: termSheet?.id,
+    });
+  if (extras.payments.schoolFee)
+    await schoolFeePayment({
+      studentTermId: termSheet?.id,
+      amount: extras.payments.schoolFeeAmount,
+    });
 }

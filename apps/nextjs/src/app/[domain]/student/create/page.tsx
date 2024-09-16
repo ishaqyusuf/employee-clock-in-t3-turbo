@@ -19,25 +19,30 @@ export default function CreateBillable() {
     defaultValues: {},
   });
   const [sessionClassId, schoolFee, uniform] = form.watch([
-    "sessionClassId",
-    "payments.schoolFee",
-    "payments.uniform",
+    "extras.sessionClassId",
+    "extras.payments.schoolFee",
+    "extras.payments.uniform",
   ]);
   const classRooms = useClassrooms({
     loadOnInit: true,
   });
 
   async function _create() {
+    const t = await form.trigger();
+    if (t) {
+      //
+    }
+
     // await getStudentList();
     // const data = form.getValues();
     // const s = data.services.find((s) => s.id == data.serviceId);
     // let workerIds = [];
     // Object.entries(data.selection).map(([k, v]) => v && workerIds.push(k));
     // const resp = await createBillables(data.serviceId, s?.amount, workerIds);
-    toast.success("Saved");
+    // toast.success("Saved");
     // form.reset();
     // await revalidatePath('')
-    toast.success("Billables created");
+    // toast.success("Billables created");
   }
 
   return (
@@ -70,7 +75,7 @@ export default function CreateBillable() {
             titleKey="classRoom.name"
             valueKey="id"
             control={form.control}
-            name="sessionClassId"
+            name="extras.sessionClassId"
             label="Class"
           />
           <div className="col-span-2 grid gap-4">
@@ -79,13 +84,13 @@ export default function CreateBillable() {
             </div>
             <FormCheckbox
               control={form.control}
-              name="payments.form"
+              name="extras.payments.form"
               label="Form"
             />
             <div className="flex items-center justify-between">
               <FormCheckbox
                 control={form.control}
-                name="payments.schoolFee"
+                name="extras.payments.schoolFee"
                 label="School Fee"
               />
               <div
@@ -99,14 +104,14 @@ export default function CreateBillable() {
                   size="sm"
                   placeholder="Amount"
                   options={contants.schoolFees}
-                  name="payments.schoolFeeAmount"
+                  name="extras.payments.schoolFeeAmount"
                 />
               </div>
             </div>
             <div className="flex items-center justify-between">
               <FormCheckbox
                 control={form.control}
-                name="payments.uniform"
+                name="extras.payments.uniform"
                 label="Uniform"
               />
               <div
@@ -121,7 +126,7 @@ export default function CreateBillable() {
                   placeholder="Amount"
                   type="number"
                   // options={contants.schoolFees}
-                  name="payments.uniformAmount"
+                  name="extras.payments.uniformAmount"
                 />
               </div>
             </div>

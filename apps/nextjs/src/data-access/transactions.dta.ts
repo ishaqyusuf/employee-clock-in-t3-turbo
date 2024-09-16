@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import type { CreatePaymentSchema, TransactionType } from "@acme/db/schema";
 import { and, eq } from "@acme/db";
 import { db } from "@acme/db/client";
-import { StaffService, Transaction, TransactionType } from "@acme/db/schema";
+import { StaffService, Transaction } from "@acme/db/schema";
 
 import { getAuthSession } from "~/lib/auth";
 import { getBillableServices } from "./service.dta";
@@ -65,4 +66,52 @@ export async function createBillables(serviceId, amount, workerIds: any[]) {
       termId: auth.workspace.termId,
     })),
   );
+}
+
+export async function formPayment({ studentTermId }) {
+  const auth = await getAuthSession();
+  const [tx] = await db
+    .insert(Transaction)
+    .values({
+      amount: "1000",
+      studentTermId,
+      paymentType: "deposit",
+      schoolId: auth.workspace.schoolId,
+      termId: auth.workspace.termId,
+      transactionType: "entry form",
+    })
+    .returning();
+}
+export async function schoolFeePayment({ studentTermId, amount }) {
+  const auth = await getAuthSession();
+  const [tx] = await db
+    .insert(Transaction)
+    .values({
+      amount,
+      studentTermId,
+      paymentType: "deposit",
+      schoolId: auth.workspace.schoolId,
+      termId: auth.workspace.termId,
+      transactionType: "school fee",
+    })
+    .returning();
+}
+export async function studentPayment(data: typeof CreatePaymentSchema._type) {
+  const auth = await getAuthSession();
+  const [tx] = await db
+    .insert(Transaction)
+    .values({
+      ...(data as any),
+      paymentType: "deposit",
+      schoolId: auth.workspace.schoolId,
+      termId: auth.workspace.termId,
+    })
+    .returning();
+}
+export async function uniformPayment({ amount, studentTermId }) {
+  await studentPayment({
+    amount,
+    studentTermId,
+    transactionType: "uniform",
+  });
 }

@@ -34,23 +34,6 @@ export const Student = pgTable(
   }),
 );
 
-export const CreateStudentSchema = createInsertSchema(Student)
-  .omit({
-    id: true,
-    createdAt: true,
-    updatedAt: true,
-    deletedAt: true,
-  })
-  .extend({
-    sessionClassId: z.string(),
-    payments: z.object({
-      form: z.boolean().default(false),
-      schoolFee: z.boolean().default(false),
-      schoolFeeAmount: z.string(),
-      uniform: z.boolean(),
-      uniformAmount: z.string(),
-    }),
-  });
 export const StudentSessionSheet = pgTable(
   "student_session_form",
   {
