@@ -25,7 +25,7 @@ import { dotValue } from "../utils/dot-value";
 interface Props<T extends FieldValues> {
   label?;
   placeholder?;
-  options?: T[];
+  options?: T[] | any[];
   SelectItem?({ option }: { option: T });
   Item?({ option }: { option: T });
   valueKey?: FieldPath<T>;

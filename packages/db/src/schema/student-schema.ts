@@ -1,4 +1,4 @@
-import { pgTable, unique, varchar } from "drizzle-orm/pg-core";
+import { pgTable, timestamp, unique, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -25,6 +25,8 @@ export const Student = pgTable(
     otherName: varchar("other_name", { length: 256 }),
     surname: varchar("surname", { length: 256 }).notNull(),
     guardianId: _uuidRel("guardianId", Guardian.id, false),
+    gender: varchar("gender"),
+    dob: timestamp("dob", { mode: "date" }),
     ...timeStamps,
   },
   (t) => ({
@@ -41,6 +43,13 @@ export const CreateStudentSchema = createInsertSchema(Student)
   })
   .extend({
     sessionClassId: z.string(),
+    payments: z.object({
+      form: z.boolean().default(false),
+      schoolFee: z.boolean().default(false),
+      schoolFeeAmount: z.string(),
+      uniform: z.boolean(),
+      uniformAmount: z.string(),
+    }),
   });
 export const StudentSessionSheet = pgTable(
   "student_session_form",

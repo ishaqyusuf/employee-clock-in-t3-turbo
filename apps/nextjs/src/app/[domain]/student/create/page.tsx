@@ -1,20 +1,28 @@
 "use client";
 
 import { CreateStudentSchema } from "@acme/db/schema";
+import { cn } from "@acme/ui";
 import Button from "@acme/ui/common/button";
+import FormCheckbox from "@acme/ui/controlled-inputs/form-checkbox";
 import FormInput from "@acme/ui/controlled-inputs/form-input";
 import FormSelect from "@acme/ui/controlled-inputs/form-select";
 import { Form, useForm } from "@acme/ui/form";
+import { Label } from "@acme/ui/label";
 import { toast } from "@acme/ui/toast";
 
 import { useClassrooms } from "~/hooks/use-classrooms";
+import contants from "~/lib/contants";
 
 export default function CreateBillable() {
   const form = useForm({
     schema: CreateStudentSchema,
     defaultValues: {},
   });
-  const sessionClassId = form.watch("sessionClassId");
+  const [sessionClassId, schoolFee, uniform] = form.watch([
+    "sessionClassId",
+    "payments.schoolFee",
+    "payments.uniform",
+  ]);
   const classRooms = useClassrooms({
     loadOnInit: true,
   });
@@ -50,14 +58,74 @@ export default function CreateBillable() {
             label="Other Name"
           />
           <FormSelect
-            options={classRooms.classRooms}
+            options={contants.genders}
             // type="combo"
+            valueKey="id"
+            control={form.control}
+            name="gender"
+            label="Gender"
+          />
+          <FormSelect
+            options={classRooms.classRooms}
             titleKey="classRoom.name"
             valueKey="id"
             control={form.control}
             name="sessionClassId"
             label="Class"
           />
+          <div className="col-span-2 grid gap-4">
+            <div className="">
+              <Label>Payments</Label>
+            </div>
+            <FormCheckbox
+              control={form.control}
+              name="payments.form"
+              label="Form"
+            />
+            <div className="flex items-center justify-between">
+              <FormCheckbox
+                control={form.control}
+                name="payments.schoolFee"
+                label="School Fee"
+              />
+              <div
+                className={cn(
+                  "w-0 overflow-hidden opacity-0",
+                  schoolFee && "w-auto opacity-100",
+                )}
+              >
+                <FormSelect
+                  control={form.control}
+                  size="sm"
+                  placeholder="Amount"
+                  options={contants.schoolFees}
+                  name="payments.schoolFeeAmount"
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <FormCheckbox
+                control={form.control}
+                name="payments.uniform"
+                label="Uniform"
+              />
+              <div
+                className={cn(
+                  "w-0 overflow-hidden opacity-0",
+                  uniform && "w-auto overflow-auto opacity-100",
+                )}
+              >
+                <FormInput
+                  control={form.control}
+                  size="sm"
+                  placeholder="Amount"
+                  type="number"
+                  // options={contants.schoolFees}
+                  name="payments.uniformAmount"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <div className="mt-4 flex justify-end">
           <Button

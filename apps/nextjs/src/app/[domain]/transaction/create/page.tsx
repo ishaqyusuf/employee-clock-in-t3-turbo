@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { TransactionType, transactionTypes } from "@acme/db/schema";
+import type { TransactionType } from "@acme/db/schema";
+import { transactionTypes } from "@acme/db/schema";
 import { useForm, useFormContext } from "@acme/ui";
 import { Badge } from "@acme/ui/badge";
 import Button from "@acme/ui/common/button";
@@ -27,6 +28,7 @@ import {
   getTransactionForm,
   TransactionForm,
 } from "~/data-access/transactions.dta";
+import contants from "~/lib/contants";
 import { TransactionFormContext, useInitCtx, useTxFormCtx } from "./use-init";
 
 export default function CreateTransactionForm() {
@@ -151,7 +153,7 @@ function SchoolFee() {
                     type="combo"
                     control={form.control}
                     name={`selection.${student.id}`}
-                    options={["500", "1000", "1500", "2000", "2500", "3000"]}
+                    options={contants.schoolFees}
                   />
                 </TableCell>
               </TableRow>
