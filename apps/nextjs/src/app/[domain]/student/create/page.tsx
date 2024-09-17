@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { CreateStudentSchema } from "@acme/db/schema";
 import { cn } from "@acme/ui";
 import Button from "@acme/ui/common/button";
@@ -10,6 +12,7 @@ import { Form, useForm } from "@acme/ui/form";
 import { Label } from "@acme/ui/label";
 import { toast } from "@acme/ui/toast";
 
+import { createStudent, createStudentForm } from "~/data-access/students.dta";
 import { useClassrooms } from "~/hooks/use-classrooms";
 import contants from "~/lib/contants";
 
@@ -18,6 +21,11 @@ export default function CreateBillable() {
     schema: CreateStudentSchema,
     defaultValues: {},
   });
+  useEffect(() => {
+    createStudentForm().then((r) => {
+      form.reset(r);
+    });
+  }, []);
   const [sessionClassId, schoolFee, uniform] = form.watch([
     "extras.sessionClassId",
     "extras.payments.schoolFee",
@@ -31,6 +39,15 @@ export default function CreateBillable() {
     const t = await form.trigger();
     if (t) {
       //
+      try {
+        await createStudent(form.getValues() as any);
+        toast.success("Created");
+      } catch (error) {
+        if (error instanceof Error) toast.error(error.message);
+      }
+    } else {
+      console.log(t);
+      console.log(form.formState.errors);
     }
 
     // await getStudentList();

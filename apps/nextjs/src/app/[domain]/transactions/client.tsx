@@ -6,12 +6,11 @@ import Link from "next/link";
 import { Button } from "@acme/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@acme/ui/card";
 
-import { BillableList } from "~/data-access/billables.dta";
-import { TransactionList } from "~/data-access/transactions.dta";
+import type { TransactionList } from "~/data-access/transactions.dta";
 import Title from "../_components/header/title";
 
 export default function PageClient({ loader }) {
-  const services: TransactionList = use(loader);
+  const items: TransactionList = use(loader);
 
   return (
     <div>
@@ -22,15 +21,15 @@ export default function PageClient({ loader }) {
         </Button>
       </div>
       <div className="space-y-4">
-        {!services.length && <div>No Service</div>}
-        {services.map((service) => (
-          <Card key={service.id}>
+        {!items.length && <div>No Service</div>}
+        {items.map((item) => (
+          <Card key={item.id}>
             <CardHeader>
-              <CardTitle>{service.staff.name}</CardTitle>
+              <CardTitle>{item.studentTermSheet?.student?.firstName}</CardTitle>
               <CardDescription>
                 <div className="inline-flex space-x-2">
-                  <span>{service.amount}</span>
-                  <span>{service.service?.title}</span>
+                  <span>{item.amount}</span>
+                  <span>{item.transactionType}</span>
                 </div>
               </CardDescription>
             </CardHeader>

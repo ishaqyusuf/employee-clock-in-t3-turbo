@@ -144,6 +144,13 @@ export async function getStudentNames() {
   };
 }
 
+export async function createStudentForm() {
+  const auth = await getAuthSession();
+  return {
+    schoolId: auth.workspace.schoolId,
+    extras: {},
+  } as typeof CreateStudentSchema._type;
+}
 // type _type = CreateStudentSchema._type;
 export async function createStudent(data: typeof CreateStudentSchema._type) {
   const auth = await getAuthSession();
@@ -152,7 +159,6 @@ export async function createStudent(data: typeof CreateStudentSchema._type) {
   rest.schoolId = auth.workspace.schoolId;
   const [student] = await db
     .insert(Student)
-
     .values({
       ...rest,
     })
@@ -166,6 +172,7 @@ export async function createStudent(data: typeof CreateStudentSchema._type) {
     })
     .returning();
   if (!student) throw new Error("Student with name already exists");
+  // console.log({ student, rest });
   const [sessionSheet] = await db
     .insert(StudentSessionSheet)
     .values({
@@ -192,6 +199,6 @@ export async function createStudent(data: typeof CreateStudentSchema._type) {
   if (extras.payments.schoolFee)
     await schoolFeePayment({
       studentTermId: termSheet?.id,
-      amount: extras.payments.schoolFeeAmount,
+      amount: Number(extras.payments.schoolFeeAmount),
     });
 }

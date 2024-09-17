@@ -26,7 +26,7 @@ export const CreateStudentSchema = createInsertSchema(Student)
         schoolFee: z.boolean().default(false),
         schoolFeeAmount: z.string().optional(),
         uniform: z.boolean(),
-        uniformAmount: z.string().optional(),
+        uniformAmount: z.number().optional(),
       }),
     }),
   });
