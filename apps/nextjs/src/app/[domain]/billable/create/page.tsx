@@ -18,11 +18,8 @@ import {
 } from "@acme/ui/table";
 import { toast } from "@acme/ui/toast";
 
-import {
-  BillableForm,
-  createBillables,
-  getBillableForm,
-} from "~/data-access/billables.dta";
+import type { BillableForm } from "~/data-access/billables.dta";
+import { createBillables, getBillableForm } from "~/data-access/billables.dta";
 import { saveService } from "~/data-access/service.dta";
 
 export default function CreateBillable() {
@@ -50,7 +47,7 @@ export default function CreateBillable() {
     // await getStudentList();
     const data = form.getValues();
     const s = data.services.find((s) => s.id == data.serviceId);
-    let workerIds = [];
+    const workerIds = [];
     Object.entries(data.selection).map(([k, v]) => v && workerIds.push(k));
     const resp = await createBillables(data.serviceId, s?.amount, workerIds);
     toast.success("Saved");

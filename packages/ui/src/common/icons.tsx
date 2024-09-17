@@ -29,6 +29,7 @@ import {
   CreditCard,
   Delete,
   DollarSign,
+  Dot,
   Eraser,
   Eye,
   EyeOff,
@@ -87,6 +88,7 @@ export type Icon = LucideIcon;
 
 export const Icons = {
   box: Box,
+  Dot,
   pdf: File,
   placeholder: ImageIcon,
   reciept: Receipt,

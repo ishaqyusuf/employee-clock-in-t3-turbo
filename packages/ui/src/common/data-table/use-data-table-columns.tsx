@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { toast } from "sonner";
 
+import { DataTableProps } from ".";
 import { useDatableCheckbox } from "./checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { TableCell, TableCellProps } from "./table-cells";
@@ -37,29 +38,16 @@ interface Props<T> {
   cellVariants?: TableCellProps;
   v2?: boolean;
 }
-export function useDataTableColumn3<T>(data: T) {
-  const ctx = {
-    _props: {},
-    cells: null,
-    props(c: Props<T>) {
-      ctx._props = c;
-      return ctx;
-    },
-    table() {
-      // return useDataTableColumn2(data,ctx._props,ctx.cells);
-    },
-  };
-  return ctx;
-}
-export function useDataTableColumn2<T>(
+
+export function useDataTable<T>(
   data: T[],
   props: Props<T>,
   cells: (ctx: CtxType<T>) => ColumnDef<T, unknown>[],
 ) {
   props.v2 = true;
-  return useDataTableColumn(data, cells, props?.checkable, props);
+  return useDataTableBase(data, cells, props?.checkable, props);
 }
-export default function useDataTableColumn<T>(
+export function useDataTableBase<T>(
   data: T[],
   cells: (ctx: CtxType<T>) => ColumnDef<T, unknown>[],
   checkable = true,

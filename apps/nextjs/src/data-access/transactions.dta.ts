@@ -1,9 +1,9 @@
 "use server";
 
 import type { CreatePaymentSchema, TransactionType } from "@acme/db/schema";
-import { and, eq } from "@acme/db";
+import { and, eq, sql } from "@acme/db";
 import { db } from "@acme/db/client";
-import { StaffService, Transaction } from "@acme/db/schema";
+import { StaffService, Student, Transaction } from "@acme/db/schema";
 
 import { getAuthSession } from "~/lib/auth";
 
@@ -32,7 +32,13 @@ export async function getTransactions() {
       },
       studentTermSheet: {
         with: {
-          student: true,
+          student: {
+            extras: {
+              fullName: sql<string>`
+                    concat(${Student.firstName}, ' ', ${Student.surname}, ' ', ${Student.otherName})
+                  `.as("full_name"),
+            },
+          },
         },
       },
     },

@@ -15,6 +15,7 @@ export default [
       "@typescript-eslint/no-explicit-any": "off",
       "@typescript-eslint/require-await": "off",
       "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-floating-promises": "off",
     },
   },
 ];

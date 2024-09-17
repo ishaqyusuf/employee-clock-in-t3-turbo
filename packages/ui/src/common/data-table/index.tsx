@@ -18,7 +18,7 @@ import {
 import { DataTablePagination } from "./data-table-pagination";
 import { TableCellProps } from "./table-cells";
 
-interface BaseProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   pageCount?: number;
@@ -33,7 +33,7 @@ function BaseDataTable<TData, TValue>({
   columns,
   cellVariants,
   addFilterCol,
-}: BaseProps<TData, TValue>) {
+}: DataTableProps<TData, TValue>) {
   const ctx = useComposeDataTable(
     data,
     columns,
