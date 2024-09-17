@@ -1,8 +1,6 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 import { z } from "zod";
 
-import { eq } from "@acme/db";
-
 import { publicProcedure } from "../trpc";
 
 export const postRouter = {
