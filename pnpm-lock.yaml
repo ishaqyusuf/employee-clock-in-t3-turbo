@@ -239,6 +239,9 @@ importers:
       '@acme/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@acme/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@acme/validators':
         specifier: workspace:*
         version: link:../../packages/validators
@@ -465,6 +468,9 @@ importers:
 
   packages/ui:
     dependencies:
+      '@acme/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@dnd-kit/core':
         specifier: ^6.1.0
         version: 6.1.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -617,6 +623,43 @@ importers:
         specifier: 'catalog:'
         version: 3.23.8
 
+  packages/utils:
+    dependencies:
+      '@t3-oss/env-core':
+        specifier: ^0.10.1
+        version: 0.10.1(typescript@5.5.3)(zod@3.23.8)
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
+      qs:
+        specifier: ^6.13.0
+        version: 6.13.0
+      use-debounce:
+        specifier: ^10.0.3
+        version: 10.0.3(react@18.3.1)
+    devDependencies:
+      '@acme/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@acme/prettier-config':
+        specifier: workspace:*
+        version: link:../../tooling/prettier
+      '@acme/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      dotenv-cli:
+        specifier: ^7.4.2
+        version: 7.4.2
+      eslint:
+        specifier: 'catalog:'
+        version: 9.7.0
+      prettier:
+        specifier: 'catalog:'
+        version: 3.3.3
+      typescript:
+        specifier: 'catalog:'
+        version: 5.5.3
+
   packages/validators:
     dependencies:
       zod:
@@ -661,7 +704,7 @@ importers:
         version: 7.35.0(eslint@9.7.0)
       eslint-plugin-react-hooks:
         specifier: rc
-        version: 5.1.0-rc-d6cb4e77-20240911(eslint@9.7.0)
+        version: 5.1.0-rc-f2df5694-20240916(eslint@9.7.0)
       eslint-plugin-turbo:
         specifier: ^2.0.8
         version: 2.0.8(eslint@9.7.0)
@@ -4938,6 +4981,9 @@ packages:
   dayjs@1.11.11:
     resolution: {integrity: sha512-okzr3f11N6WuqYtZSvm+F776mB41wRZMhKP+hc34YdW+KmtYYK9iqvHSwo2k9FEH3fhGXvOPV6yz2IcSrfRUDg==}
 
+  dayjs@1.11.13:
+    resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
+
   db0@0.1.4:
     resolution: {integrity: sha512-Ft6eCwONYxlwLjBXSJxw0t0RYtA5gW9mq8JfBXn9TtC0nDPlqePAhpv9v4g9aONBi6JI1OXHTKKkUYGd+BOrCA==}
     peerDependencies:
@@ -5397,8 +5443,8 @@ packages:
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
 
-  eslint-plugin-react-hooks@5.1.0-rc-d6cb4e77-20240911:
-    resolution: {integrity: sha512-bVg0IJv+ti3rSR6LSStSSaLSbEVX31gE9Id9SxvK+4fLHMXQHPakeusjipFpzgM1XvRSDqQPucxOhI2+i7KMNQ==}
+  eslint-plugin-react-hooks@5.1.0-rc-f2df5694-20240916:
+    resolution: {integrity: sha512-516cGsghQfJf5fu95qkoAbQUw2hwrn0EfDj/Rwddn2zY0uWx2+WQUsJoFrAM3EX6X/BvxpxW4YudlSGVeU6U1A==}
     engines: {node: '>=10'}
     peerDependencies:
       eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
@@ -7702,6 +7748,10 @@ packages:
     resolution: {integrity: sha512-Uu7ii+FQy4Qf82G4xu7ShHhjhGahEpCWc3x8UavY3CTcWV+ufmmCtwkr7ZKsX42jdL0kr1B5FKUeqJvAn51jzQ==}
     hasBin: true
 
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
+    engines: {node: '>=0.6'}
+
   query-string@7.1.3:
     resolution: {integrity: sha512-hh2WYhq4fi8+b+/2Kg9CEge4fDPvHS534aOOvOZeQ3+Vf2mCFsaFBYj0i+iXcAq6I9Vzp5fjMFBlONvayDC1qg==}
     engines: {node: '>=6'}
@@ -8996,6 +9046,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  use-debounce@10.0.3:
+    resolution: {integrity: sha512-DxQSI9ZKso689WM1mjgGU3ozcxU1TJElBJ3X6S4SMzMNcm2lVH0AHmyXB+K7ewjz2BSUKJTDqTcwtSMRfB89dg==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '*'
 
   use-latest-callback@0.1.9:
     resolution: {integrity: sha512-CL/29uS74AwreI/f2oz2hLTW7ZqVeV5+gxFeGudzQrgkCytrHw33G4KbnQOrRlAEzzAFXi7dDLMC9zhWcVpzmw==}
@@ -14129,6 +14185,8 @@ snapshots:
 
   dayjs@1.11.11: {}
 
+  dayjs@1.11.13: {}
+
   db0@0.1.4: {}
 
   debug@2.6.9:
@@ -14640,7 +14698,7 @@ snapshots:
       safe-regex-test: 1.0.3
       string.prototype.includes: 2.0.0
 
-  eslint-plugin-react-hooks@5.1.0-rc-d6cb4e77-20240911(eslint@9.7.0):
+  eslint-plugin-react-hooks@5.1.0-rc-f2df5694-20240916(eslint@9.7.0):
     dependencies:
       eslint: 9.7.0
 
@@ -17294,6 +17352,10 @@ snapshots:
 
   qrcode-terminal@0.11.0: {}
 
+  qs@6.13.0:
+    dependencies:
+      side-channel: 1.0.6
+
   query-string@7.1.3:
     dependencies:
       decode-uri-component: 0.2.2
@@ -18720,6 +18782,10 @@ snapshots:
       tslib: 2.6.3
     optionalDependencies:
       '@types/react': 18.3.3
+
+  use-debounce@10.0.3(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   use-latest-callback@0.1.9(react@18.3.1):
     dependencies:

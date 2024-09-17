@@ -8,6 +8,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@acme/ui/card";
 
 import type { TransactionList } from "~/data-access/transactions.dta";
 import Title from "../_components/header/title";
+import { Table, TableBody, TableCell, TableRow } from "@acme/ui/table";
 
 export default function PageClient({ loader }) {
   const items: TransactionList = use(loader);
@@ -22,8 +23,14 @@ export default function PageClient({ loader }) {
       </div>
       <div className="space-y-4">
         {!items.length && <div>No Service</div>}
+        <Table>
+          <TableBody>
+           
         {items.map((item) => (
-          <Card key={item.id}>
+          <TableRow key={item.id}>
+            <TableCell>
+              <Cell
+            </TableCell>
             <CardHeader>
               <CardTitle>{item.studentTermSheet?.student?.firstName}</CardTitle>
               <CardDescription>
@@ -33,8 +40,10 @@ export default function PageClient({ loader }) {
                 </div>
               </CardDescription>
             </CardHeader>
-          </Card>
+          </TableRow>
         ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
