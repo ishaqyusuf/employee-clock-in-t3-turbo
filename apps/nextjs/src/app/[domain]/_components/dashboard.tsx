@@ -2,14 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import {
-  BarChart,
-  BookOpen,
-  DollarSign,
-  GraduationCap,
-  Menu,
-  Users,
-} from "lucide-react";
+import { BookOpen, DollarSign, GraduationCap, Users } from "lucide-react";
 
 import { Button } from "@acme/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@acme/ui/card";

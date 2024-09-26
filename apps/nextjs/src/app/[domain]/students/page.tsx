@@ -9,7 +9,7 @@ import Client from "./client";
 
 export default async function ListstudentsPage({ params }) {
   const domain = params.domain?.split(".")[0];
-  const studentList = await getStudentList();
+  const studentList = getStudentList();
 
   const auth = await getAuthSession();
   // const currentTerm = await db.query.AcademicTerm.findFirst({
@@ -19,9 +19,8 @@ export default async function ListstudentsPage({ params }) {
   return (
     <div className="container mx-auto p-4">
       {/* {JSON.stringify(terms)} */}
-      <h1 className="mb-4 text-2xl font-bold">Student List</h1>
 
-      <Client data={studentList} />
+      <Client resp={studentList} />
     </div>
   );
 }

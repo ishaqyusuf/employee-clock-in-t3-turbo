@@ -1,21 +1,18 @@
 "use client";
 
+import { use } from "react";
 import Link from "next/link";
 
 import { Badge } from "@acme/ui/badge";
 import { Button } from "@acme/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@acme/ui/card";
+import { DataTable } from "@acme/ui/common/data-table/index";
+import { TableCell } from "@acme/ui/common/data-table/table-cells";
+import { useDataTable } from "@acme/ui/common/data-table/use-data-table-columns";
 import { Menu } from "@acme/ui/common/menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@acme/ui/dropdown-menu";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -28,11 +25,14 @@ import {
 } from "~/data-access/classrooms.dta";
 import { useClassrooms } from "~/hooks/use-classrooms";
 import { _revalidate } from "~/lib/revalidate";
+import Title from "../_components/header/title";
 
 interface Props {
-  data?: StudentsList;
+  // data?: StudentsList;
+  resp;
 }
-export default function Client({ data }: Props) {
+export default function Client({ resp }: Props) {
+  const data: StudentsList = use(resp);
   const PaymentStatusBadge: React.FC<{ status: string }> = ({ status }) => {
     const colorMap = {
       Paid: "bg-green-500",
@@ -45,7 +45,36 @@ export default function Client({ data }: Props) {
   const classCtx = useClassrooms({
     loadOnInit: true,
   });
-
+  const table = useDataTable(
+    data,
+    {
+      cellVariants: {
+        size: "sm",
+      },
+      checkable: false,
+    },
+    (ctx) => [
+      ctx.Column("data", ({ item }) => (
+        <TableCell>
+          <TableCell.Primary>{item.fullName}</TableCell.Primary>
+          <TableCell.Secondary>{item.classRoom}</TableCell.Secondary>
+        </TableCell>
+      )),
+    ],
+  );
+  return (
+    <>
+      <Title>Students</Title>
+      <div className="fixed bottom-0 right-0 m-4 mb-12">
+        <Button asChild size={"icon"}>
+          <Link href="/student/create">+</Link>
+        </Button>
+      </div>
+      <DataTable {...(table.props as any)}>
+        <DataTable.Table />
+      </DataTable>
+    </>
+  );
   return (
     <>
       <div className="fixed bottom-0 right-0 m-4 mb-12">

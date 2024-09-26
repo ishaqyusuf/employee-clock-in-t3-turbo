@@ -52,7 +52,7 @@ function _Table({}) {
   const { table, columns } = useDataTableContext();
   return (
     <div className="sm:rounded-lg sm:border">
-      <Table>
+      <Table className="">
         <TableHeader className={cn("")}>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
