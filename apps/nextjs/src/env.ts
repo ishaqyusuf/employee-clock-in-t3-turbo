@@ -18,12 +18,6 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().url(),
-    PROJECT_ID_VERCEL: z.string(),
-    VERCEL_URL: z.string().optional(),
-    TEAM_ID_VERCEL: z.string(),
-    APP_ROOT_DOMAIN: z.string(),
-    SERVER_APP_ROOT_DOMAIN: z.string(),
-    AUTH_BEARER_TOKEN: z.string(),
   },
 
   /**

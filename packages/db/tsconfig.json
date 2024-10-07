@@ -7,7 +7,7 @@
     "src/schema/.bin/classroom-schema.ts",
     "src/schema/.bin/example.ts",
     "src/schema/.bin/student-schema.ts",
-    "src/schema/.bin/user-schema.ts"
+    "src/schema/user-schema.ts"
   ],
   "exclude": ["node_modules"]
 }

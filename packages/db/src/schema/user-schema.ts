@@ -10,7 +10,6 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { _uuidRel, timeStamps } from "./schema-helper";
-import { School } from "./school-schema";
 
 // export const Post = pgTable("post", {
 //   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -42,7 +41,6 @@ export const User = pgTable(
     username: varchar("username", { length: 255 }),
     phoneNo: varchar("phone_no", { length: 255 }),
     role: varchar("role", { length: 255 }).$type<UserRole>(),
-    schoolId: _uuidRel("school_id", School.id).notNull(),
     emailVerified: timestamp("emailVerified", {
       mode: "date",
       withTimezone: true,
@@ -51,7 +49,7 @@ export const User = pgTable(
     ...timeStamps,
   },
   (t) => ({
-    unq: unique().on(t.email, t.schoolId),
+    // unq: unique().on(t.email, t.schoolId),
   }),
 );
 
