@@ -1,5 +1,4 @@
 import {
-  decimal,
   integer,
   pgTable,
   time,

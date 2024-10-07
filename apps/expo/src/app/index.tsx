@@ -117,16 +117,16 @@ function MobileAuth() {
 export default function Index() {
   const utils = api.useUtils();
 
-  const postQuery = api.post.all.useQuery();
+  const postQuery = api.workSession.all.useQuery();
 
-  const deletePostMutation = api.post.delete.useMutation({
-    onSettled: () => utils.post.all.invalidate(),
-  });
+  // const deletePostMutation = api.post.delete.useMutation({
+  //   onSettled: () => utils.post.all.invalidate(),
+  // });
 
   return (
     <SafeAreaView className="bg-background">
       {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home Page" }} />
+      <Stack.Screen options={{ title: "Home" }} />
       <View className="h-full w-full bg-background p-4">
         <Text className="pb-2 text-center text-5xl font-bold text-foreground">
           Create <Text className="text-primary">T3</Text> Turbo
@@ -145,14 +145,17 @@ export default function Index() {
           estimatedItemSize={20}
           ItemSeparatorComponent={() => <View className="h-2" />}
           renderItem={(p) => (
-            <PostCard
-              post={p.item}
-              onDelete={() => deletePostMutation.mutate(p.item.id)}
-            />
+            <View>
+              <Text>VIEW</Text>
+            </View>
+            // <PostCard
+            //   post={p.item}
+            //   onDelete={() => deletePostMutation.mutate(p.item.id)}
+            // />
           )}
         />
 
-        <CreatePost />
+        {/* <CreatePost /> */}
       </View>
     </SafeAreaView>
   );

@@ -1,11 +1,11 @@
 {
-  "name": "@acme/expo",
+  "name": "@acme/employee-clock-in",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",
   "scripts": {
     "clean": "git clean -xdf .cache .expo .turbo android ios node_modules",
-    "dev": "expo start",
+    "dev": "expo start --port 4011",
     "dev:android": "expo start --android",
     "dev:ios": "expo start --ios",
     "android": "expo run:android",
