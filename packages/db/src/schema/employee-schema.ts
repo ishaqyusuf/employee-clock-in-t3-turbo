@@ -1,53 +1,55 @@
-import {
-  integer,
-  pgTable,
-  time,
-  timestamp,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
-import { __uuidPri, _uuidRel, timeStamps } from "./schema-helper";
-import { User } from "./user-schema";
+import { BreakPeriod, WorkSession } from "../schema";
 
-// Updated table and column names for better clarity and consistency
-
-export const CurrencyExchange = pgTable("currency_exchanges", {
-  id: __uuidPri,
-  exchangeRate: integer("exchange_rate"), // clearer description
-  amountInCents: integer("amount_in_cents"), // standardized cents notation
-  totalExchanged: integer("total_exchanged"),
-  ...timeStamps,
+export const CreateClockInSchema = createInsertSchema(WorkSession, {
+  employeeProfileId: z.string().min(1),
+  startTime: z.string().min(1),
+}).omit({
+  id: true,
+  createdAt: true,
+  deletedAt: true,
+  payrollRequestId: true,
+  updatedAt: true,
 });
+export type CreateClockInSchemaType = z.infer<typeof CreateClockInSchema>;
 
-export const PayrollRequest = pgTable("payroll_requests", {
-  id: __uuidPri,
-  totalMinutesWorked: integer("total_minutes_worked"), // more descriptive
-  totalPayableInCents: integer("total_payable_in_cents"),
-  paidAt: timestamp("paid_at"),
-  ...timeStamps,
+export const TakeBreakSchema = createInsertSchema(BreakPeriod, {
+  startTime: z.string().min(1),
+  workSessionId: z.string().min(1),
+}).omit({
+  id: true,
+  createdAt: true,
+  deletedAt: true,
+  durationInMinute: true,
+  endTime: true,
+  updatedAt: true,
 });
-
-export const WorkSession = pgTable("work_sessions", {
-  id: __uuidPri,
-  startTime: timestamp("start_time").notNull().defaultNow(),
-  endTime: timestamp("end_time"),
-  totalWorkDuration: time("total_work_duration"), // renamed to "duration" for clarity
-  payrollRequestId: _uuidRel("payroll_request_id", PayrollRequest.id).notNull(),
-  employeeId: _uuidRel("employee_id", User.id).notNull(),
-  ...timeStamps,
+export const BackToWorkSchema = createInsertSchema(BreakPeriod, {
+  endTime: z.string().min(1),
+  id: z.string().min(1).uuid(),
+}).omit({
+  startTime: true,
+  workSessionId: true,
+  createdAt: true,
+  deletedAt: true,
+  durationInMinute: true,
+  updatedAt: true,
 });
-
-export const WorkSessionNote = pgTable("work_session_notes", {
-  id: __uuidPri,
-  noteText: varchar("note_text"), // more descriptive column name
-  workSessionId: _uuidRel("work_session_id", WorkSession.id).notNull(),
-  ...timeStamps,
-});
-
-export const BreakPeriod = pgTable("break_periods", {
-  id: __uuidPri,
-  workSessionId: _uuidRel("work_session_id", WorkSession.id).notNull(),
-  startTime: timestamp("start_time").notNull().defaultNow(),
-  endTime: timestamp("end_time"),
-  ...timeStamps,
-});
+export const ClockoutSchema = createInsertSchema(WorkSession, {
+  endTime: z.string().min(1),
+  id: z.string().min(1),
+})
+  .extend({
+    breakId: z.string(),
+  })
+  .omit({
+    startTime: true,
+    employeeProfileId: true,
+    payrollRequestId: true,
+    createdAt: true,
+    deletedAt: true,
+    durationInMinute: true,
+    updatedAt: true,
+  });

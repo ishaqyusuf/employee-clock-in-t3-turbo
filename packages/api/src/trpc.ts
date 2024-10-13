@@ -53,7 +53,7 @@ export const createTRPCContext = async (opts: {
     token: authToken,
   };
 };
-
+export type DbType = Awaited<ReturnType<typeof createTRPCContext>>["db"];
 /**
  * 2. INITIALIZATION
  *

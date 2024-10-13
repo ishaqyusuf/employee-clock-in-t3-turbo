@@ -1,13 +1,10 @@
 {
-  "name": "@acme/api",
-  "version": "0.1.0",
+  "name": "@acme/utils-module",
   "private": true,
+  "version": "0.1.0",
   "type": "module",
   "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
+    ".": "./src/index.ts"
   },
   "license": "MIT",
   "scripts": {
@@ -16,25 +13,19 @@
     "dev": "tsc",
     "format": "prettier --check . --ignore-path ../../.gitignore",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false"
-  },
-  "dependencies": {
-    "@acme/auth": "workspace:*",
-    "@acme/db": "workspace:*",
-    "@acme/validators": "workspace:*",
-    "@trpc/server": "catalog:",
-    "dayjs": "catalog:",
-    "superjson": "2.2.1",
-    "zod": "catalog:"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@acme/eslint-config": "workspace:*",
     "@acme/prettier-config": "workspace:*",
     "@acme/tsconfig": "workspace:*",
-    "@acme/utils-module": "workspace:*",
     "eslint": "catalog:",
     "prettier": "catalog:",
     "typescript": "catalog:"
   },
-  "prettier": "@acme/prettier-config"
+  "prettier": "@acme/prettier-config",
+  "dependencies": {
+    "@acme/db": "workspace:*",
+    "dayjs": "catalog:"
+  }
 }

@@ -11,24 +11,26 @@ import "../styles.css";
 // This is the main layout of the app
 // It wraps your pages with the providers they need
 export default function RootLayout() {
-  const { colorScheme } = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   return (
     <TRPCProvider>
       {/*
           The Stack component displays the current page.
           It also allows you to configure your screens 
         */}
-      <Stack
+      <Stack screenOptions={{ headerShown: false }} />
+      <StatusBar style="light" translucent />
+      {/* <Stack
         screenOptions={{
           headerStyle: {
-            backgroundColor: "#f472b6",
+            backgroundColor: "yellow",
           },
           contentStyle: {
-            backgroundColor: colorScheme == "dark" ? "#09090B" : "#FFFFFF",
+            backgroundColor: colorScheme != "dark" ? "#09090B" : "#FFFFFF",
           },
         }}
       />
-      <StatusBar />
+      <StatusBar /> */}
     </TRPCProvider>
   );
 }

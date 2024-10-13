@@ -1,10 +1,19 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import { invalidateSessionToken } from "@acme/auth";
+import { User } from "@acme/db/schema";
 
+import { __getExampleSession } from "../data-access/example";
 import { protectedProcedure, publicProcedure } from "../trpc";
 
 export const authRouter = {
+  user: publicProcedure.query(async ({ ctx }) => {
+    return await __getExampleSession(ctx.db);
+  }),
+  exampleSession: publicProcedure.query(async ({ ctx }) => {
+    return await __getExampleSession(ctx.db);
+  }),
+
   getSession: publicProcedure.query(({ ctx }) => {
     return ctx.session;
   }),

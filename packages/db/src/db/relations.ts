@@ -1,13 +1,15 @@
 import { relations } from "drizzle-orm";
 
+import { Company } from "./company-db";
 import {
   BreakPeriod,
   CurrencyExchange,
+  EmployeeCompanyProfile,
   PayrollRequest,
   WorkSession,
   WorkSessionNote,
-} from "./employee-schema";
-import { User } from "./user-schema";
+} from "./employee-db";
+import { User } from "./user-db";
 
 // Relations for CurrencyExchange
 export const currencyExchangeRelations = relations(
@@ -34,9 +36,9 @@ export const payrollRequestRelations = relations(
 
 // Relations for WorkSession
 export const workSessionRelations = relations(WorkSession, ({ many, one }) => ({
-  employee: one(User, {
-    fields: [WorkSession.employeeId],
-    references: [User.id],
+  employeeProfile: one(EmployeeCompanyProfile, {
+    fields: [WorkSession.employeeProfileId],
+    references: [EmployeeCompanyProfile.id],
   }),
   payrollRequest: one(PayrollRequest, {
     fields: [WorkSession.payrollRequestId],
@@ -64,3 +66,23 @@ export const breakPeriodRelations = relations(BreakPeriod, ({ one }) => ({
     references: [WorkSession.id],
   }),
 }));
+
+export const employeeCompanyProfileRelations = relations(
+  EmployeeCompanyProfile,
+  ({ one, many }) => ({
+    employee: one(User, {
+      fields: [EmployeeCompanyProfile.employeeId],
+      references: [User.id],
+    }),
+    company: one(Company, {
+      fields: [EmployeeCompanyProfile.companyId],
+      references: [Company.id],
+    }),
+  }),
+);
+export const companyRelations = relations(
+  EmployeeCompanyProfile,
+  ({ one, many }) => ({
+    employeeProfiles: many(EmployeeCompanyProfile),
+  }),
+);

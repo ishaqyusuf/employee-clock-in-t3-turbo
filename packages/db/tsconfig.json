@@ -3,11 +3,11 @@
   "compilerOptions": {},
   "include": [
     "src",
-    "src/schema/.bin/accounting-schema.ts",
-    "src/schema/.bin/classroom-schema.ts",
-    "src/schema/.bin/example.ts",
-    "src/schema/.bin/student-schema.ts",
-    "src/schema/user-schema.ts"
+    "src/db/.bin/accounting-schema.ts",
+    "src/db/.bin/classroom-schema.ts",
+    "src/db/.bin/example.ts",
+    "src/db/.bin/student-schema.ts",
+    "src/db/user-db.ts"
   ],
   "exclude": ["node_modules"]
 }

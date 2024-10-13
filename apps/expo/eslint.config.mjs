@@ -8,4 +8,11 @@ export default [
   },
   ...baseConfig,
   ...reactConfig,
+  {
+    rules: {
+      "@typescript-eslint/no-redundant-type-constituents": "off",
+      "@typescript-eslint/no-unsafe-return": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ];

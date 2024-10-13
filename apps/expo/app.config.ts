@@ -2,7 +2,7 @@ import type { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "expo",
+  name: "clockIn",
   slug: "expo",
   scheme: "expo",
   version: "0.1.0",

@@ -9,7 +9,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { _uuidRel, timeStamps } from "./schema-helper";
+import { _uuidRel, timeStamps } from "./db-helper";
 
 // export const Post = pgTable("post", {
 //   id: uuid("id").notNull().primaryKey().defaultRandom(),
@@ -49,7 +49,7 @@ export const User = pgTable(
     ...timeStamps,
   },
   (t) => ({
-    // unq: unique().on(t.email, t.schoolId),
+    unq: unique().on(t.email),
   }),
 );
 

@@ -1,162 +1,135 @@
-import { useState } from "react";
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import { useEffect } from "react";
+import {
+  RefreshControl,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Link, Stack } from "expo-router";
-import { FlashList } from "@shopify/flash-list";
+import { Stack } from "expo-router";
 
-import type { RouterOutputs } from "~/utils/api";
+import HomeHead from "~/components/home/home-head";
+import { HomeContext, useInitHomeContext } from "~/hooks/use-home-hook";
 import { api } from "~/utils/api";
-import { useSignIn, useSignOut, useUser } from "~/utils/auth";
 
-function PostCard(props: {
-  post: RouterOutputs["post"]["all"][number];
-  onDelete: () => void;
-}) {
-  return (
-    <View className="flex flex-row rounded-lg bg-muted p-4">
-      <View className="flex-grow">
-        <Link
-          asChild
-          href={{
-            pathname: "/post/[id]",
-            params: { id: props.post.id },
-          }}
-        >
-          <Pressable className="">
-            <Text className="text-xl font-semibold text-primary">
-              {props.post.title}
-            </Text>
-            <Text className="mt-2 text-foreground">{props.post.content}</Text>
-          </Pressable>
-        </Link>
-      </View>
-      <Pressable onPress={props.onDelete}>
-        <Text className="font-bold uppercase text-primary">Delete</Text>
-      </Pressable>
-    </View>
-  );
-}
-
-function CreatePost() {
+export default function HomeIndex() {
   const utils = api.useUtils();
+  // const { colorScheme, setColorScheme } = useColorScheme();
+  // const postQuery = api.workSession.all.useQuery();
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-
-  const { mutate, error } = api.post.create.useMutation({
-    async onSuccess() {
-      setTitle("");
-      setContent("");
-      await utils.post.all.invalidate();
-    },
-  });
+  const ctx = useInitHomeContext();
 
   return (
-    <View className="mt-4 flex gap-2">
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={title}
-        onChangeText={setTitle}
-        placeholder="Title"
-      />
-      {error?.data?.zodError?.fieldErrors.title && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.title}
-        </Text>
-      )}
-      <TextInput
-        className="items-center rounded-md border border-input bg-background px-3 text-lg leading-[1.25] text-foreground"
-        value={content}
-        onChangeText={setContent}
-        placeholder="Content"
-      />
-      {error?.data?.zodError?.fieldErrors.content && (
-        <Text className="mb-2 text-destructive">
-          {error.data.zodError.fieldErrors.content}
-        </Text>
-      )}
-      <Pressable
-        className="flex items-center rounded bg-primary p-2"
-        onPress={() => {
-          mutate({
-            title,
-            content,
-          });
+    <SafeAreaView className="flex-1">
+      <Stack.Screen
+        options={{
+          statusBarColor: "rgba(150,20,255, 0.2)",
+          // navigationBarColor: "white",
+          headerTintColor: "black",
+          statusBarStyle: "dark",
+          headerShown: false,
         }}
-      >
-        <Text className="text-foreground">Create</Text>
-      </Pressable>
-      {error?.data?.code === "UNAUTHORIZED" && (
-        <Text className="mt-2 text-destructive">
-          You need to be logged in to create a post
-        </Text>
-      )}
-    </View>
-  );
-}
-
-function MobileAuth() {
-  const user = useUser();
-  const signIn = useSignIn();
-  const signOut = useSignOut();
-
-  return (
-    <>
-      <Text className="pb-2 text-center text-xl font-semibold text-white">
-        {user?.name ?? "Not logged in"}
-      </Text>
-      <Button
-        onPress={() => (user ? signOut() : signIn())}
-        title={user ? "Sign Out" : "Sign In With Discord"}
-        color={"#5B65E9"}
       />
-    </>
-  );
-}
+      <HomeContext.Provider value={ctx}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={ctx.refreshing}
+              onRefresh={ctx.onRefresh}
+            />
+          }
+          className="bg-gray-50"
+        >
+          <HomeHead />
+          <View className="relative flex-1" style={{ zIndex: 1 }}>
+            <View className="z-10 -mt-16 w-full">
+              <View className="mx-4 flex-1 rounded border border-muted-foreground bg-white p-4">
+                <View className="">
+                  <View className="mb-4 flex-row items-center justify-between">
+                    <Text className="text-2xl font-medium text-gray-700">
+                      Total working hour
+                    </Text>
+                  </View>
+                  <View className="flex-row gap-4">
+                    <View className="flex-1 flex-col justify-between border-r border-muted-foreground/50">
+                      <Text className="text-base text-gray-700">Today</Text>
+                      <Text className="text-lg font-bold text-gray-800">
+                        {ctx.workStatus?.current?.totalWorkMinutesString}
+                      </Text>
+                    </View>
+                    <View className="flex-1 flex-col justify-between">
+                      <Text className="text-base text-gray-700">
+                        This pay period
+                      </Text>
+                      <Text className="text-lg font-bold text-gray-800">
+                        {ctx.workStatus?.payPeriod?.payableMinuteString}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View className="mt-6 rounded-lg bg-white p-4 shadow-sm">
+                <Text className="mb-3 text-base text-muted-foreground">
+                  Current pay period
+                </Text>
+                <View className="mb-8 flex-row items-center justify-between">
+                  <Text className="text-2xl font-semibold text-gray-900">
+                    Jul 01st - 31st, 2022
+                  </Text>
+                  <TouchableOpacity>
+                    <Text className="text-lg font-medium text-gray-900">
+                      + Add Time
+                    </Text>
+                  </TouchableOpacity>
+                </View>
 
-export default function Index() {
-  const utils = api.useUtils();
+                {ctx.workStatus?.list?.map((item, i) => (
+                  <View
+                    key={i}
+                    className="mb-4 rounded border border-muted-foreground/50 p-4"
+                  >
+                    <View className="mb-4 flex-row items-center justify-between">
+                      <View className="flex-1">
+                        <Text className="text-base text-gray-500">
+                          {item.date}
+                        </Text>
+                      </View>
+                      <View className="flex-1">
+                        <Text className="text-base text-gray-500">
+                          In & Out
+                        </Text>
+                      </View>
+                    </View>
 
-  const postQuery = api.workSession.all.useQuery();
+                    <View className="mb-4 flex-row items-center justify-between">
+                      <View className="flex-1">
+                        <Text className="text-2xl font-semibold text-gray-800">
+                          {item.totalHrs} total hrs
+                        </Text>
+                      </View>
+                      <View className="flex-1 flex-row items-center justify-center gap-2">
+                        <Text className="text-lg font-medium">
+                          {item.inTime}
+                        </Text>
+                        <Text className="text-sm font-medium">...</Text>
+                        <Text className="text-lg font-medium">
+                          {item.outTime}
+                        </Text>
+                      </View>
+                    </View>
 
-  // const deletePostMutation = api.post.delete.useMutation({
-  //   onSettled: () => utils.post.all.invalidate(),
-  // });
-
-  return (
-    <SafeAreaView className="bg-background">
-      {/* Changes page title visible on the header */}
-      <Stack.Screen options={{ title: "Home" }} />
-      <View className="h-full w-full bg-background p-4">
-        <Text className="pb-2 text-center text-5xl font-bold text-foreground">
-          Create <Text className="text-primary">T3</Text> Turbo
-        </Text>
-
-        <MobileAuth />
-
-        <View className="py-2">
-          <Text className="font-semibold italic text-primary">
-            Press on a post
-          </Text>
-        </View>
-
-        <FlashList
-          data={postQuery.data}
-          estimatedItemSize={20}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          renderItem={(p) => (
-            <View>
-              <Text>VIEW</Text>
+                    {/* <View className="mb-4 flex-row items-center justify-between">
+                      <Text className="text-red-600">Rejected by</Text>
+                      <Text className="text-sm text-gray-800">Jerome Bell</Text>
+                    </View> */}
+                  </View>
+                ))}
+              </View>
             </View>
-            // <PostCard
-            //   post={p.item}
-            //   onDelete={() => deletePostMutation.mutate(p.item.id)}
-            // />
-          )}
-        />
-
-        {/* <CreatePost /> */}
-      </View>
+          </View>
+        </ScrollView>
+      </HomeContext.Provider>
     </SafeAreaView>
   );
 }

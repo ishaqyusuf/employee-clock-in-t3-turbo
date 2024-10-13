@@ -1,7 +1,7 @@
 import { authRouter } from "./router/auth";
 import { bootstrapRouter } from "./router/bootstrap";
 import { postRouter } from "./router/post";
-import { workSessionRouter } from "./router/work-session";
+import { workSessionRouter } from "./router/work-session.router";
 import { createTRPCRouter } from "./trpc";
 
 export const appRouter = createTRPCRouter({
